@@ -73,10 +73,11 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
     const [isCurrentlyPressed, setIsCurrentlyPressed] = React.useState(false)
 
     // Determine the button state based on props
-    const buttonState = isDisabled 
-      ? 'disabled' 
-      : isActive 
-        ? 'active' 
+    // Allow active state to show even when disabled (for sequence playback)
+    const buttonState = isActive 
+      ? 'active' 
+      : isDisabled 
+        ? 'disabled' 
         : (isPressed || isCurrentlyPressed) 
           ? 'pressed' 
           : 'normal'
@@ -106,7 +107,7 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
         ref={ref}
         className={cn(gameButtonVariants({ variant, state: buttonState, size, className }))}
         onClick={handleClick}
-        disabled={isDisabled}
+        disabled={isDisabled && !isActive}
         {...props}
       >
         <span className="drop-shadow-lg">{number}</span>

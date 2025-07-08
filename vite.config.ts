@@ -19,6 +19,7 @@ export default defineConfig({
       '@/styles': '/src/styles',
       '@/assets': '/src/assets',
       '@/lib': '/src/lib',
+      '@/data': '/src/data',
     },
   },
 })

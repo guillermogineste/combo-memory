@@ -30,7 +30,8 @@
       "@/store/*": ["src/store/*"],
       "@/styles/*": ["src/styles/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/lib/*": ["src/lib/*"]
+      "@/lib/*": ["src/lib/*"],
+      "@/data/*": ["src/data/*"]
     },
 
     /* Linting */
