@@ -76,6 +76,22 @@ export const GameController: React.FC<GameControllerProps> = ({ className }) => 
     }
   }, [gameState.currentState, nextSequence])
 
+  // Auto-start next sequence after progression
+  useEffect(() => {
+    if (gameState.currentState === 'IDLE' && 
+        gameState.currentSequence && 
+        gameState.currentSequenceIndex > 0) {
+      // If we're in IDLE state with a sequence and not on the first sequence,
+      // it means we just progressed to a new sequence, so auto-start it
+      const timer = setTimeout(() => {
+        console.log('Auto-starting next sequence:', gameState.currentSequence?.name)
+        startSequence(gameState.currentSequenceIndex)
+      }, 500) // Brief pause before starting
+
+      return () => clearTimeout(timer)
+    }
+  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, startSequence])
+
   // Handle start game button
   const handleStartGame = () => {
     console.log('Starting game')
