@@ -29,7 +29,8 @@
       "@/contexts/*": ["src/contexts/*"],
       "@/store/*": ["src/store/*"],
       "@/styles/*": ["src/styles/*"],
-      "@/assets/*": ["src/assets/*"]
+      "@/assets/*": ["src/assets/*"],
+      "@/lib/*": ["src/lib/*"]
     },
 
     /* Linting */

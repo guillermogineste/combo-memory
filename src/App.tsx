@@ -1,34 +1,44 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { GameBoard } from './components/ui/GameBoard'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeButtons, setActiveButtons] = useState<number[]>([])
+
+  /**
+   * Handle button clicks from the GameBoard
+   * @param buttonNumber - The number of the button that was clicked
+   */
+  const handleButtonClick = (buttonNumber: number) => {
+    console.log(`App: Button ${buttonNumber} clicked`) // Debug log
+    
+    // For now, just toggle the button's active state for demonstration
+    setActiveButtons(prev => 
+      prev.includes(buttonNumber) 
+        ? prev.filter(num => num !== buttonNumber)
+        : [...prev, buttonNumber]
+    )
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-white mb-2">Simon Says</h1>
+        <p className="text-slate-300">Click the buttons to test the interface</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+      
+      <GameBoard 
+        onButtonClick={handleButtonClick}
+        activeButtons={activeButtons}
+        disabledButtons={[]}
+      />
+      
+      <div className="mt-8 text-center">
+        <p className="text-slate-400 text-sm">
+          Active buttons: {activeButtons.length > 0 ? activeButtons.join(', ') : 'None'}
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
