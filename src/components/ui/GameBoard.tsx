@@ -26,7 +26,7 @@ const buttonColors = [
 
 /**
  * GameBoard component for Simon Says game
- * Contains 8 buttons arranged in a 2x4 grid
+ * Contains 8 buttons arranged in a 4x6 grid with varying spans
  * @param onButtonClick - Callback when a button is clicked
  * @param activeButtons - Array of button numbers that should be highlighted
  * @param disabledButtons - Array of button numbers that should be disabled
@@ -111,34 +111,93 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
       return false
     }
 
+    /**
+     * Creates a GameButton with all necessary props
+     * @param buttonNumber - The button number (1-8)
+     * @returns GameButton component
+     */
+    const createGameButton = (buttonNumber: number) => {
+      const isActive = isButtonActive(buttonNumber)
+      const isDisabled = isButtonDisabled(buttonNumber)
+      const colorVariant = buttonColors[buttonNumber - 1]
+
+      return (
+        <GameButton
+          key={buttonNumber}
+          number={buttonNumber}
+          variant={colorVariant}
+          size="game"
+          isActive={isActive}
+          isDisabled={isDisabled}
+          onGameClick={handleButtonClick}
+        />
+      )
+    }
+
     return (
       <div
         ref={ref}
         className={cn(
-          "grid grid-cols-2 grid-rows-4 gap-4 [grid-gap:16px] bg-slate-800",
+          "grid grid-cols-4 grid-rows-6 gap-4 [grid-gap:16px] max-w-4xl mx-auto h-96",
           className
         )}
         {...props}
       >
-        {/* Generate 8 buttons */}
-        {Array.from({ length: 8 }, (_, index) => {
-          const buttonNumber = index + 1
-          const isActive = isButtonActive(buttonNumber)
-          const isDisabled = isButtonDisabled(buttonNumber)
-          const colorVariant = buttonColors[index]
+        {/* Button 1 - Column 2, Rows 1-2 (spans 2 rows) */}
+        <div className="col-start-2 row-start-1 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(1)}
+          </div>
+        </div>
 
-          return (
-            <GameButton
-              key={buttonNumber}
-              number={buttonNumber}
-              variant={colorVariant}
-              size="game"
-              isActive={isActive}
-              isDisabled={isDisabled}
-              onGameClick={handleButtonClick}
-            />
-          )
-        })}
+        {/* Button 2 - Column 3, Rows 1-2 (spans 2 rows) */}
+        <div className="col-start-3 row-start-1 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(2)}
+          </div>
+        </div>
+
+        {/* Button 3 - Column 1, Rows 2-3 (spans 2 rows) */}
+        <div className="col-start-1 row-start-2 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(3)}
+          </div>
+        </div>
+
+        {/* Button 4 - Column 4, Rows 2-3 (spans 2 rows) */}
+        <div className="col-start-4 row-start-2 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(4)}
+          </div>
+        </div>
+
+        {/* Button 5 - Column 2, Rows 3-5 (spans 3 rows) */}
+        <div className="col-start-2 row-start-3 row-span-3">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(5)}
+          </div>
+        </div>
+
+        {/* Button 6 - Column 3, Rows 3-5 (spans 3 rows) */}
+        <div className="col-start-3 row-start-3 row-span-3">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(6)}
+          </div>
+        </div>
+
+        {/* Button 7 - Column 1, Rows 5-6 (spans 2 rows) */}
+        <div className="col-start-1 row-start-5 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(7)}
+          </div>
+        </div>
+
+        {/* Button 8 - Column 4, Rows 5-6 (spans 2 rows) */}
+        <div className="col-start-4 row-start-5 row-span-2">
+          <div className="p-2.5 w-full h-full">
+            {createGameButton(8)}
+          </div>
+        </div>
       </div>
     )
   }
