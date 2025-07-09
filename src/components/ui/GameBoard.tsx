@@ -121,24 +121,24 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
       const isDisabled = isButtonDisabled(buttonNumber)
       const colorVariant = buttonColors[buttonNumber - 1]
 
-      return (
-        <GameButton
-          key={buttonNumber}
-          number={buttonNumber}
-          variant={colorVariant}
-          size="game"
-          isActive={isActive}
-          isDisabled={isDisabled}
-          onGameClick={handleButtonClick}
-        />
-      )
+             return (
+         <GameButton
+           key={buttonNumber}
+           number={buttonNumber}
+           variant={colorVariant}
+           size="flexible"
+           isActive={isActive}
+           isDisabled={isDisabled}
+           onGameClick={handleButtonClick}
+         />
+       )
     }
 
     return (
       <div
         ref={ref}
         className={cn(
-          "grid grid-cols-4 grid-rows-6 gap-4 [grid-gap:16px] max-w-4xl mx-auto h-96",
+          "grid grid-cols-4 grid-rows-6 gap-4 [grid-gap:16px] w-[480px] h-[360px] mx-auto",
           className
         )}
         {...props}

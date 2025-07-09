@@ -28,6 +28,7 @@ const gameButtonVariants = cva(
         sm: "h-[80px] w-[80px] text-lg",
         lg: "h-[160px] w-[160px] text-3xl",
         game: "h-[80px] w-[80px] text-xl",
+        flexible: "h-full w-full text-xl",
       },
     },
     defaultVariants: {
