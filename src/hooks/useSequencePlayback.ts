@@ -6,6 +6,8 @@ interface UseSequencePlaybackProps {
   isPlaying: boolean
   onSequenceComplete: () => void
   onButtonHighlight: (buttonNumber: number | null) => void
+  /** Custom buttons to play - if provided, overrides sequence.buttons */
+  customButtons?: number[]
 }
 
 /**
@@ -14,12 +16,14 @@ interface UseSequencePlaybackProps {
  * @param isPlaying - Whether the sequence should be playing
  * @param onSequenceComplete - Callback when sequence playback is complete
  * @param onButtonHighlight - Callback when a button should be highlighted (null to clear)
+ * @param customButtons - Custom buttons to play (overrides sequence.buttons)
  */
 export function useSequencePlayback({
   sequence,
   isPlaying,
   onSequenceComplete,
-  onButtonHighlight
+  onButtonHighlight,
+  customButtons
 }: UseSequencePlaybackProps) {
   const timeoutRefs = useRef<NodeJS.Timeout[]>([])
   const isPlayingRef = useRef(isPlaying)
@@ -46,12 +50,20 @@ export function useSequencePlayback({
       return
     }
 
-    console.log('Starting sequence playback:', sequence.name)
+    // Use custom buttons if provided, otherwise use sequence buttons
+    const buttonsToPlay = customButtons || sequence.buttons
+    
+    if (buttonsToPlay.length === 0) {
+      console.log('No buttons to play')
+      return
+    }
+
+    console.log('Starting sequence playback:', sequence.name, 'Buttons:', buttonsToPlay)
     
     // Clear any existing timeouts
     clearTimeouts()
 
-    const { buttons, timing } = sequence
+    const { timing } = sequence
     const {
       buttonHighlightDuration,
       pauseBetweenButtons,
@@ -61,11 +73,10 @@ export function useSequencePlayback({
     let currentTime = 0
 
     // Play each button in sequence
-    buttons.forEach((buttonNumber) => {
+    buttonsToPlay.forEach((buttonNumber) => {
       // Schedule button highlight
       const highlightTimeout = setTimeout(() => {
         if (isPlayingRef.current) {
-          console.log(`Highlighting button ${buttonNumber}`)
           onButtonHighlight(buttonNumber)
         }
       }, currentTime)
@@ -74,7 +85,6 @@ export function useSequencePlayback({
       // Schedule button unhighlight
       const unhighlightTimeout = setTimeout(() => {
         if (isPlayingRef.current) {
-          console.log(`Unhighlighting button ${buttonNumber}`)
           onButtonHighlight(null)
         }
       }, currentTime + buttonHighlightDuration)
@@ -94,13 +104,12 @@ export function useSequencePlayback({
     }, currentTime - pauseBetweenButtons + pauseBeforeUserInput)
     timeoutRefs.current.push(completeTimeout)
 
-  }, [sequence, onSequenceComplete, onButtonHighlight, clearTimeouts])
+  }, [sequence, customButtons, onSequenceComplete, onButtonHighlight, clearTimeouts])
 
   /**
    * Stop sequence playback
    */
   const stopSequence = useCallback(() => {
-    console.log('Stopping sequence playback')
     clearTimeouts()
     onButtonHighlight(null) // Clear any highlights
   }, [clearTimeouts, onButtonHighlight])
@@ -117,7 +126,7 @@ export function useSequencePlayback({
     return () => {
       stopSequence()
     }
-  }, [isPlaying, sequence, playSequence, stopSequence])
+  }, [isPlaying, sequence, customButtons, playSequence, stopSequence])
 
   // Cleanup on unmount
   useEffect(() => {

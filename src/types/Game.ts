@@ -11,6 +11,13 @@ export type GameState =
   | 'GAME_COMPLETE'
 
 /**
+ * Game mode enum for different play styles
+ */
+export type GameMode = 
+  | 'NORMAL'    // Play sequences one after another
+  | 'ADDITIVE'  // Build sequences incrementally by groups
+
+/**
  * Timing configuration for sequence playback
  */
 export interface SequenceTiming {
@@ -23,6 +30,18 @@ export interface SequenceTiming {
 }
 
 /**
+ * Group definition for additive mode
+ */
+export interface SequenceGroup {
+  /** Unique identifier for the group */
+  id: number
+  /** Display name for the group */
+  name: string
+  /** Array of button numbers (1-8) that make up this group */
+  buttons: number[]
+}
+
+/**
  * Individual sequence configuration
  */
 export interface Sequence {
@@ -32,6 +51,8 @@ export interface Sequence {
   name: string
   /** Array of button numbers (1-8) that make up the sequence */
   buttons: number[]
+  /** Groups for additive mode - if not provided, will be auto-generated */
+  groups?: SequenceGroup[]
   /** Timing configuration for this sequence */
   timing: SequenceTiming
   /** Maximum number of attempts allowed for this sequence */
@@ -68,10 +89,16 @@ export interface GameConfig {
 export interface GameStateData {
   /** Current phase of the game */
   currentState: GameState
+  /** Current game mode (normal or additive) */
+  gameMode: GameMode
   /** Index of the current sequence being played */
   currentSequenceIndex: number
   /** The current sequence being played */
   currentSequence: Sequence | null
+  /** Current level in additive mode (0-based index of groups) */
+  currentAdditiveLevel: number
+  /** Maximum level for current sequence in additive mode */
+  maxAdditiveLevel: number
   /** User's input buffer (buttons pressed) */
   userInput: number[]
   /** Current attempt number for the current sequence */

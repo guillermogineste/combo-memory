@@ -4,6 +4,18 @@
       "id": 1,
       "name": "Sequence 1",
       "buttons": [1, 3, 2],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Group 1",
+          "buttons": [1]
+        },
+        {
+          "id": 2,
+          "name": "Group 2",
+          "buttons": [3, 2]
+        }
+      ],
       "timing": {
         "buttonHighlightDuration": 600,
         "pauseBetweenButtons": 200,
@@ -16,6 +28,18 @@
       "id": 2,
       "name": "Sequence 2", 
       "buttons": [4, 1, 6, 2],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Group 1",
+          "buttons": [4, 1]
+        },
+        {
+          "id": 2,
+          "name": "Group 2",
+          "buttons": [6, 2]
+        }
+      ],
       "timing": {
         "buttonHighlightDuration": 500,
         "pauseBetweenButtons": 150,
@@ -28,6 +52,23 @@
       "id": 3,
       "name": "Sequence 3",
       "buttons": [7, 3, 8, 1, 5],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Group 1",
+          "buttons": [7, 3]
+        },
+        {
+          "id": 2,
+          "name": "Group 2",
+          "buttons": [8, 1]
+        },
+        {
+          "id": 3,
+          "name": "Group 3",
+          "buttons": [5]
+        }
+      ],
       "timing": {
         "buttonHighlightDuration": 400,
         "pauseBetweenButtons": 100,
