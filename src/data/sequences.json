@@ -1,19 +1,14 @@
 {
-  "sequences": [
+  "quickModeSequences": [
     {
       "id": 1,
-      "name": "Sequence 1",
+      "name": "Quick Start",
       "buttons": [1, 3, 2],
       "groups": [
         {
           "id": 1,
           "name": "Group 1",
-          "buttons": [1]
-        },
-        {
-          "id": 2,
-          "name": "Group 2",
-          "buttons": [3, 2]
+          "buttons": [1, 3, 2]
         }
       ],
       "timing": {
@@ -26,18 +21,13 @@
     },
     {
       "id": 2,
-      "name": "Sequence 2", 
+      "name": "Quick Dash",
       "buttons": [4, 1, 6, 2],
       "groups": [
         {
           "id": 1,
           "name": "Group 1",
-          "buttons": [4, 1]
-        },
-        {
-          "id": 2,
-          "name": "Group 2",
-          "buttons": [6, 2]
+          "buttons": [4, 1, 6, 2]
         }
       ],
       "timing": {
@@ -46,27 +36,17 @@
         "pauseBeforeUserInput": 800
       },
       "maxAttempts": 3,
-      "difficulty": "medium"
+      "difficulty": "easy"
     },
     {
       "id": 3,
-      "name": "Sequence 3",
+      "name": "Quick Flash",
       "buttons": [7, 3, 8, 1, 5],
       "groups": [
         {
           "id": 1,
           "name": "Group 1",
-          "buttons": [7, 3]
-        },
-        {
-          "id": 2,
-          "name": "Group 2",
-          "buttons": [8, 1]
-        },
-        {
-          "id": 3,
-          "name": "Group 3",
-          "buttons": [5]
+          "buttons": [7, 3, 8, 1, 5]
         }
       ],
       "timing": {
@@ -74,7 +54,204 @@
         "pauseBetweenButtons": 100,
         "pauseBeforeUserInput": 600
       },
+      "maxAttempts": 3,
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "name": "Quick Reflex",
+      "buttons": [2, 6, 4, 8],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Group 1",
+          "buttons": [2, 6, 4, 8]
+        }
+      ],
+      "timing": {
+        "buttonHighlightDuration": 350,
+        "pauseBetweenButtons": 100,
+        "pauseBeforeUserInput": 500
+      },
       "maxAttempts": 2,
+      "difficulty": "hard"
+    },
+    {
+      "id": 5,
+      "name": "Quick Master",
+      "buttons": [5, 1, 7, 3, 6],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Group 1",
+          "buttons": [5, 1, 7, 3, 6]
+        }
+      ],
+      "timing": {
+        "buttonHighlightDuration": 300,
+        "pauseBetweenButtons": 80,
+        "pauseBeforeUserInput": 400
+      },
+      "maxAttempts": 2,
+      "difficulty": "hard"
+    }
+  ],
+  "chainCombinationModeSequences": [
+    {
+      "id": 1,
+      "name": "Chain Builder",
+      "buttons": [1, 3, 2, 4, 6, 5, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Foundation",
+          "buttons": [1, 3]
+        },
+        {
+          "id": 2,
+          "name": "Build Up",
+          "buttons": [2, 4]
+        },
+        {
+          "id": 3,
+          "name": "Expansion",
+          "buttons": [6, 5]
+        },
+        {
+          "id": 4,
+          "name": "Completion",
+          "buttons": [7, 8]
+        },
+        {
+          "id": 5,
+          "name": "Reinforcement",
+          "buttons": [1, 2, 3, 4]
+        },
+        {
+          "id": 6,
+          "name": "Mastery",
+          "buttons": [5, 6, 7, 8]
+        }
+      ],
+      "timing": {
+        "buttonHighlightDuration": 700,
+        "pauseBetweenButtons": 300,
+        "pauseBeforeUserInput": 1500
+      },
+      "maxAttempts": 4,
+      "difficulty": "medium"
+    },
+    {
+      "id": 2,
+      "name": "Memory Palace",
+      "buttons": [4, 1, 6, 2, 8, 3, 5, 7, 4, 6, 8, 5, 1, 2, 3, 7, 4, 1, 6, 2, 8, 3, 5, 7, 1, 2, 3, 4, 5, 6],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Room 1",
+          "buttons": [4, 1]
+        },
+        {
+          "id": 2,
+          "name": "Room 2",
+          "buttons": [6, 2]
+        },
+        {
+          "id": 3,
+          "name": "Room 3",
+          "buttons": [8, 3]
+        },
+        {
+          "id": 4,
+          "name": "Room 4",
+          "buttons": [5, 7]
+        },
+        {
+          "id": 5,
+          "name": "Hallway",
+          "buttons": [4, 6, 8, 5]
+        },
+        {
+          "id": 6,
+          "name": "Entrance",
+          "buttons": [1, 2, 3, 7]
+        },
+        {
+          "id": 7,
+          "name": "Revisit",
+          "buttons": [4, 1, 6, 2]
+        },
+        {
+          "id": 8,
+          "name": "Review",
+          "buttons": [8, 3, 5, 7]
+        },
+        {
+          "id": 9,
+          "name": "Final Tour",
+          "buttons": [1, 2, 3, 4, 5, 6]
+        }
+      ],
+      "timing": {
+        "buttonHighlightDuration": 600,
+        "pauseBetweenButtons": 250,
+        "pauseBeforeUserInput": 1200
+      },
+      "maxAttempts": 3,
+      "difficulty": "hard"
+    },
+    {
+      "id": 3,
+      "name": "Epic Journey",
+      "buttons": [1, 2, 3, 4, 5, 6, 7, 8, 8, 7, 6, 5, 4, 3, 2, 1, 1, 3, 5, 7, 2, 4, 6, 8, 8, 6, 4, 2, 7, 5, 3, 1],
+      "groups": [
+        {
+          "id": 1,
+          "name": "Ascent",
+          "buttons": [1, 2, 3, 4]
+        },
+        {
+          "id": 2,
+          "name": "Peak",
+          "buttons": [5, 6, 7, 8]
+        },
+        {
+          "id": 3,
+          "name": "Descent",
+          "buttons": [8, 7, 6, 5]
+        },
+        {
+          "id": 4,
+          "name": "Return",
+          "buttons": [4, 3, 2, 1]
+        },
+        {
+          "id": 5,
+          "name": "Odd Path",
+          "buttons": [1, 3, 5, 7]
+        },
+        {
+          "id": 6,
+          "name": "Even Path",
+          "buttons": [2, 4, 6, 8]
+        },
+        {
+          "id": 7,
+          "name": "Reverse Even",
+          "buttons": [8, 6, 4, 2]
+        },
+        {
+          "id": 8,
+          "name": "Reverse Odd",
+          "buttons": [7, 5, 3, 1]
+        }
+      ],
+      "timing": {
+        "buttonHighlightDuration": 500,
+        "pauseBetweenButtons": 200,
+        "pauseBeforeUserInput": 1000
+      },
+      "maxAttempts": 3,
       "difficulty": "hard"
     }
   ],

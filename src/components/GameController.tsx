@@ -39,15 +39,15 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     setHighlightedButton(buttonNumber)
   }, [])
 
-  // Get current sequence buttons for additive mode - MEMOIZED to prevent infinite loops
+  // Get current sequence buttons for chain combination mode - MEMOIZED to prevent infinite loops
   const currentSequenceButtons = useMemo(() => {
     if (!gameState.currentSequence) return []
     
-    if (gameState.gameMode === 'NORMAL') {
+    if (gameState.gameMode === 'QUICK_MODE') {
       return gameState.currentSequence.buttons
     }
     
-    // For additive mode, build cumulative sequence
+    // For chain combination mode, build cumulative sequence
     const groups = gameState.currentSequence.groups || []
     const buttonsToPlay: number[] = []
     
@@ -56,7 +56,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       buttonsToPlay.push(...groups[i].buttons)
     }
     
-    console.log('Additive mode buttons:', buttonsToPlay, 'Level:', gameState.currentAdditiveLevel + 1) // Debug log
+    console.log('Chain combination mode buttons:', buttonsToPlay, 'Level:', gameState.currentAdditiveLevel + 1) // Debug log
     return buttonsToPlay
   }, [
     gameState.currentSequence,
@@ -70,7 +70,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     isPlaying: gameState.currentState === 'SHOWING_SEQUENCE',
     onSequenceComplete: handleSequenceComplete,
     onButtonHighlight: handleButtonHighlight,
-    customButtons: gameState.gameMode === 'ADDITIVE' ? currentSequenceButtons : undefined
+    customButtons: gameState.gameMode === 'CHAIN_COMBINATION_MODE' ? currentSequenceButtons : undefined
   })
 
   // Handle user button clicks
@@ -156,9 +156,9 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     setHighlightedButton(null)
   }
 
-  // Get current level info for additive mode
+  // Get current level info for chain combination mode
   const getCurrentLevelInfo = () => {
-    if (gameState.gameMode === 'ADDITIVE' && gameState.currentSequence) {
+    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
       return `Level ${gameState.currentAdditiveLevel + 1}/${gameState.maxAdditiveLevel + 1}`
     }
     return ''
@@ -166,7 +166,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
   // Get current sequence description
   const getCurrentSequenceDescription = () => {
-    if (gameState.gameMode === 'ADDITIVE' && gameState.currentSequence) {
+    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
       const groups = gameState.currentSequence.groups
       if (groups && groups[gameState.currentAdditiveLevel]) {
         return groups[gameState.currentAdditiveLevel].name
@@ -190,12 +190,12 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
             onChange={handleGameModeChange}
             className="px-4 py-2 bg-slate-700 text-white rounded-md border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]"
           >
-            <option value="NORMAL">Normal Mode</option>
-            <option value="ADDITIVE">Additive Mode</option>
+            <option value="QUICK_MODE">Quick Mode</option>
+            <option value="CHAIN_COMBINATION_MODE">Chain Combination Mode</option>
           </select>
           <div className="text-sm text-slate-400 text-center max-w-md">
-            {gameState.gameMode === 'NORMAL' && 'Play sequences one after another'}
-            {gameState.gameMode === 'ADDITIVE' && 'Build sequences incrementally by groups'}
+            {gameState.gameMode === 'QUICK_MODE' && 'Play short sequences one after another'}
+            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && 'Build long sequences incrementally by groups'}
           </div>
         </div>
       </div>
@@ -236,7 +236,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
             <p className="text-slate-400 text-sm mt-2">
               Memorize the pattern...
             </p>
-            {gameState.gameMode === 'ADDITIVE' && (
+            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
               <p className="text-slate-500 text-xs mt-1">
                 Playing buttons: [{currentSequenceButtons.join(', ')}]
               </p>
@@ -254,7 +254,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
             <p className="text-slate-400 text-sm mt-2">
               Click the buttons in the same order
             </p>
-            {gameState.gameMode === 'ADDITIVE' && (
+            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
               <p className="text-slate-500 text-xs mt-1">
                 Expected: [{currentSequenceButtons.join(', ')}]
               </p>
@@ -278,7 +278,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
               ✅ Correct!
             </p>
             <p className="text-slate-300 mt-2">
-              {gameState.gameMode === 'ADDITIVE' && gameState.currentAdditiveLevel < gameState.maxAdditiveLevel
+              {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentAdditiveLevel < gameState.maxAdditiveLevel
                 ? 'Great job! Moving to next level...'
                 : 'Great job! Moving to next sequence...'}
             </p>
@@ -340,7 +340,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
           <span className="text-slate-300">
             Sequence: {gameState.currentSequenceIndex + 1}/{gameState.sequences.length}
           </span>
-          {gameState.gameMode === 'ADDITIVE' && gameState.currentSequence && (
+          {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence && (
             <span className="text-green-400">
               {getCurrentLevelInfo()}
             </span>

@@ -14,8 +14,8 @@ export type GameState =
  * Game mode enum for different play styles
  */
 export type GameMode = 
-  | 'NORMAL'    // Play sequences one after another
-  | 'ADDITIVE'  // Build sequences incrementally by groups
+  | 'QUICK_MODE'              // Play short sequences one after another
+  | 'CHAIN_COMBINATION_MODE'  // Build long sequences incrementally by groups
 
 /**
  * Timing configuration for sequence playback
@@ -30,7 +30,7 @@ export interface SequenceTiming {
 }
 
 /**
- * Group definition for additive mode
+ * Group definition for chain combination mode
  */
 export interface SequenceGroup {
   /** Unique identifier for the group */
@@ -51,7 +51,7 @@ export interface Sequence {
   name: string
   /** Array of button numbers (1-8) that make up the sequence */
   buttons: number[]
-  /** Groups for additive mode - if not provided, will be auto-generated */
+  /** Groups for chain combination mode - if not provided, will be auto-generated */
   groups?: SequenceGroup[]
   /** Timing configuration for this sequence */
   timing: SequenceTiming
@@ -77,8 +77,10 @@ export interface GameSettings {
  * Complete game configuration loaded from JSON
  */
 export interface GameConfig {
-  /** Array of all available sequences */
-  sequences: Sequence[]
+  /** Quick mode sequences (short sequences) */
+  quickModeSequences: Sequence[]
+  /** Chain combination mode sequences (long sequences) */
+  chainCombinationModeSequences: Sequence[]
   /** Global game settings */
   gameSettings: GameSettings
 }
@@ -89,15 +91,15 @@ export interface GameConfig {
 export interface GameStateData {
   /** Current phase of the game */
   currentState: GameState
-  /** Current game mode (normal or additive) */
+  /** Current game mode (quick mode or chain combination mode) */
   gameMode: GameMode
   /** Index of the current sequence being played */
   currentSequenceIndex: number
   /** The current sequence being played */
   currentSequence: Sequence | null
-  /** Current level in additive mode (0-based index of groups) */
+  /** Current level in chain combination mode (0-based index of groups) */
   currentAdditiveLevel: number
-  /** Maximum level for current sequence in additive mode */
+  /** Maximum level for current sequence in chain combination mode */
   maxAdditiveLevel: number
   /** User's input buffer (buttons pressed) */
   userInput: number[]
