@@ -1,12 +1,13 @@
 import { useEffect, useRef, useCallback } from 'react'
 import type { Sequence } from '@/types/Game'
+import { GAME_TIMING } from '@/constants/gameConstants'
 
 interface UseSequencePlaybackProps {
   sequence: Sequence | null
   isPlaying: boolean
   onSequenceComplete: () => void
   onButtonHighlight: (buttonNumber: number | null) => void
-  /** Custom buttons to play - if provided, overrides sequence.buttons */
+  /** Custom buttons to play - if provided, overrides sequence buttons */
   customButtons?: number[]
 }
 
@@ -16,7 +17,7 @@ interface UseSequencePlaybackProps {
  * @param isPlaying - Whether the sequence should be playing
  * @param onSequenceComplete - Callback when sequence playback is complete
  * @param onButtonHighlight - Callback when a button should be highlighted (null to clear)
- * @param customButtons - Custom buttons to play (overrides sequence.buttons)
+ * @param customButtons - Custom buttons to play (overrides sequence buttons)
  */
 export function useSequencePlayback({
   sequence,
@@ -50,25 +51,40 @@ export function useSequencePlayback({
       return
     }
 
-    // Use custom buttons if provided, otherwise use sequence buttons
-    const buttonsToPlay = customButtons || sequence.buttons
+    // Use custom buttons if provided, otherwise get buttons from sequence
+    let buttonsToPlay: number[] = []
+    
+    if (customButtons) {
+      buttonsToPlay = customButtons
+    } else {
+      // Extract buttons from sequence based on its structure
+      if (Array.isArray(sequence.sequence)) {
+        if (sequence.sequence.length > 0 && Array.isArray(sequence.sequence[0])) {
+          // This is a nested array (chain combination mode) - shouldn't happen without customButtons
+          console.warn('Chain combination mode sequence provided without customButtons')
+          return
+        } else {
+          // This is a flat array (quick mode)
+          buttonsToPlay = sequence.sequence as number[]
+        }
+      }
+    }
     
     if (buttonsToPlay.length === 0) {
       console.log('No buttons to play')
       return
     }
 
-    console.log('Starting sequence playback:', sequence.name, 'Buttons:', buttonsToPlay)
+    console.log('Starting sequence playback - Buttons:', buttonsToPlay)
     
     // Clear any existing timeouts
     clearTimeouts()
 
-    const { timing } = sequence
     const {
       buttonHighlightDuration,
       pauseBetweenButtons,
       pauseBeforeUserInput
-    } = timing
+    } = GAME_TIMING
 
     let currentTime = 0
 

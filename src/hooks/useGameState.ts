@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from 'react'
-import type { GameStateData, Sequence, GameConfig, GameMode, SequenceGroup } from '@/types/Game'
+import type { GameStateData, Sequence, GameConfig, GameMode } from '@/types/Game'
+import { GAME_SETTINGS, SCORING } from '@/constants/gameConstants'
 import sequencesData from '@/data/sequences.json'
 
 /**
@@ -37,33 +38,8 @@ const initialGameState: GameStateData = {
   currentAttempt: 1,
   score: 0,
   sequences: [],
-  gameSettings: {
-    allowRetries: true,
-    showProgress: true,
-    playSound: false
-  },
+  gameSettings: GAME_SETTINGS,
   errorMessage: null
-}
-
-/**
- * Generate groups for sequences that don't have them defined
- * @param buttons - Array of button numbers
- * @param groupSize - Size of each group (default: 2)
- * @returns Array of generated groups
- */
-function generateGroups(buttons: number[], groupSize: number = 2): SequenceGroup[] {
-  const groups: SequenceGroup[] = []
-  
-  for (let i = 0; i < buttons.length; i += groupSize) {
-    const groupButtons = buttons.slice(i, i + groupSize)
-    groups.push({
-      id: groups.length + 1,
-      name: `Group ${groups.length + 1}`,
-      buttons: groupButtons
-    })
-  }
-  
-  return groups
 }
 
 /**
@@ -75,17 +51,17 @@ function generateGroups(buttons: number[], groupSize: number = 2): SequenceGroup
  */
 function buildCurrentSequenceButtons(sequence: Sequence, mode: GameMode, level: number): number[] {
   if (mode === 'QUICK_MODE') {
-    return sequence.buttons
+    // For quick mode, sequence is a simple array of numbers
+    return sequence.sequence as number[]
   }
   
-  // For chain combination mode, get groups and build cumulative sequence
-  const groups = sequence.groups || generateGroups(sequence.buttons)
-  
+  // For chain combination mode, sequence is a nested array
+  const groups = sequence.sequence as number[][]
   const buttonsToPlay: number[] = []
   
   // Add all buttons from groups 0 to current level
   for (let i = 0; i <= level && i < groups.length; i++) {
-    buttonsToPlay.push(...groups[i].buttons)
+    buttonsToPlay.push(...groups[i])
   }
   
   return buttonsToPlay
@@ -99,12 +75,23 @@ function buildCurrentSequenceButtons(sequence: Sequence, mode: GameMode, level: 
  * @returns Array of buttons expected for input
  */
 function getExpectedSequence(sequence: Sequence, mode: GameMode, level: number): number[] {
+  return buildCurrentSequenceButtons(sequence, mode, level)
+}
+
+/**
+ * Get the maximum level for a sequence in chain combination mode
+ * @param sequence - The sequence to get max level for
+ * @param mode - Current game mode
+ * @returns Maximum level (0-based)
+ */
+function getMaxAdditiveLevel(sequence: Sequence, mode: GameMode): number {
   if (mode === 'QUICK_MODE') {
-    return sequence.buttons
+    return 0
   }
   
-  // For chain combination mode, return the full sequence up to current level
-  return buildCurrentSequenceButtons(sequence, mode, level)
+  // For chain combination mode, max level is the number of groups - 1
+  const groups = sequence.sequence as number[][]
+  return groups.length - 1
 }
 
 /**
@@ -127,7 +114,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       return {
         ...initialGameState,
         sequences,
-        gameSettings: gameConfig.gameSettings
+        gameSettings: GAME_SETTINGS
       }
 
     case 'SET_GAME_MODE':
@@ -151,14 +138,13 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       }
 
     case 'START_SEQUENCE':
-      const groups = action.sequence.groups || generateGroups(action.sequence.buttons)
-      const maxLevel = state.gameMode === 'CHAIN_COMBINATION_MODE' ? groups.length - 1 : 0
+      const maxLevel = getMaxAdditiveLevel(action.sequence, state.gameMode)
       
       // Only reset additive level if this is a different sequence
       const isNewSequence = !state.currentSequence || state.currentSequence.id !== action.sequence.id
       const additiveLevel = (state.gameMode === 'CHAIN_COMBINATION_MODE' && !isNewSequence) ? state.currentAdditiveLevel : 0
       
-      console.log('START_SEQUENCE - Groups:', groups, 'Max Level:', maxLevel, 'Is New Sequence:', isNewSequence, 'Preserving Level:', additiveLevel) // Debug log
+      console.log('START_SEQUENCE - Max Level:', maxLevel, 'Is New Sequence:', isNewSequence, 'Preserving Level:', additiveLevel) // Debug log
       
       return {
         ...state,
@@ -215,7 +201,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       return {
         ...state,
         currentState: 'SUCCESS',
-        score: state.score + (isChainCombinationMode ? 5 : 10), // Less points per level in chain combination mode
+        score: state.score + (isChainCombinationMode ? SCORING.chainCombinationPoints : SCORING.quickModePoints),
         currentAttempt: 1,
         errorMessage: null
       }
@@ -290,7 +276,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         ...initialGameState,
         gameMode: state.gameMode, // Preserve the current game mode
         sequences: state.sequences,
-        gameSettings: state.gameSettings
+        gameSettings: GAME_SETTINGS
       }
 
     default:

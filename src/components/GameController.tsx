@@ -3,6 +3,7 @@ import { GameBoard } from './ui/GameBoard'
 import { Button } from './ui/button'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
+import { UI_TIMING } from '@/constants/gameConstants'
 import type { GameMode, GameStateData } from '@/types/Game'
 
 export interface GameControllerProps {
@@ -44,16 +45,16 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     if (!gameState.currentSequence) return []
     
     if (gameState.gameMode === 'QUICK_MODE') {
-      return gameState.currentSequence.buttons
+      return gameState.currentSequence.sequence as number[]
     }
     
     // For chain combination mode, build cumulative sequence
-    const groups = gameState.currentSequence.groups || []
+    const groups = gameState.currentSequence.sequence as number[][]
     const buttonsToPlay: number[] = []
     
     // Add all buttons from groups 0 to current level
     for (let i = 0; i <= gameState.currentAdditiveLevel && i < groups.length; i++) {
-      buttonsToPlay.push(...groups[i].buttons)
+      buttonsToPlay.push(...groups[i])
     }
     
     console.log('Chain combination mode buttons:', buttonsToPlay, 'Level:', gameState.currentAdditiveLevel + 1) // Debug log
@@ -95,7 +96,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     if (gameState.currentState === 'SUCCESS') {
       const timer = setTimeout(() => {
         nextSequence()
-      }, 1500) // Wait 1.5 seconds before next sequence
+      }, UI_TIMING.successDelay)
 
       return () => clearTimeout(timer)
     }
@@ -113,7 +114,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       
       const timer = setTimeout(() => {
         startSequence(gameState.currentSequenceIndex)
-      }, 500) // Brief pause before starting
+      }, UI_TIMING.autoStartDelay)
 
       return () => clearTimeout(timer)
     }
@@ -147,7 +148,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     retrySequence()
     setTimeout(() => {
       startSequence(gameState.currentSequenceIndex)
-    }, 500)
+    }, UI_TIMING.autoStartDelay)
   }
 
   // Handle reset game
@@ -167,12 +168,9 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   // Get current sequence description
   const getCurrentSequenceDescription = () => {
     if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
-      const groups = gameState.currentSequence.groups
-      if (groups && groups[gameState.currentAdditiveLevel]) {
-        return groups[gameState.currentAdditiveLevel].name
-      }
+      return `Sequence ${gameState.currentSequence.id}`
     }
-    return gameState.currentSequence?.name || ''
+    return `Sequence ${gameState.currentSequence?.id || ''}`
   }
 
   // Render game mode selection
@@ -204,7 +202,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
   // Render game status
   const renderGameStatus = () => {
-    const { currentState, currentSequence, score, currentAttempt, errorMessage } = gameState
+    const { currentState, currentSequence, score, errorMessage } = gameState
     const levelInfo = getCurrentLevelInfo()
     const sequenceDescription = getCurrentSequenceDescription()
 
@@ -249,10 +247,9 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
           <div className="text-center">
             <p className="text-green-400 font-semibold">
               Your turn! Repeat the sequence
-              {levelInfo && <span className="text-slate-300 ml-2">({levelInfo})</span>}
             </p>
             <p className="text-slate-400 text-sm mt-2">
-              Click the buttons in the same order
+              Click the buttons in the correct order
             </p>
             {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
               <p className="text-slate-500 text-xs mt-1">
@@ -262,25 +259,16 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
           </div>
         )
       
-      case 'CHECKING_INPUT':
-        return (
-          <div className="text-center">
-            <p className="text-blue-400 font-semibold">
-              Checking...
-            </p>
-          </div>
-        )
-      
       case 'SUCCESS':
         return (
           <div className="text-center">
-            <p className="text-green-500 font-bold text-xl">
-              ✅ Correct!
+            <p className="text-green-400 font-bold text-lg">
+              🎉 Perfect! Well done!
             </p>
-            <p className="text-slate-300 mt-2">
+            <p className="text-slate-400 text-sm mt-2">
               {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentAdditiveLevel < gameState.maxAdditiveLevel
-                ? 'Great job! Moving to next level...'
-                : 'Great job! Moving to next sequence...'}
+                ? 'Moving to next level...'
+                : 'Moving to next sequence...'}
             </p>
           </div>
         )
@@ -288,18 +276,15 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       case 'FAILURE':
         return (
           <div className="text-center">
-            <p className="text-red-500 font-bold text-xl">
-              ❌ Incorrect
-            </p>
-            <p className="text-slate-300 mt-2">
-              {errorMessage}
+            <p className="text-red-400 font-bold text-lg">
+              ❌ Incorrect sequence!
             </p>
             <p className="text-slate-400 text-sm mt-2">
-              Attempt {currentAttempt} of {currentSequence?.maxAttempts}
+              {errorMessage || 'Try again'}
             </p>
             <div className="mt-4 space-x-2">
-              <Button onClick={handleRetry} className="bg-orange-600 hover:bg-orange-700">
-                Try Again
+              <Button onClick={handleRetry} className="bg-yellow-600 hover:bg-yellow-700">
+                Retry
               </Button>
               <Button onClick={handleResetGame} variant="outline">
                 Reset Game
@@ -311,23 +296,24 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       case 'GAME_COMPLETE':
         return (
           <div className="text-center">
-            <p className="text-green-500 font-bold text-2xl">
-              🎉 Game Complete!
+            <p className="text-purple-400 font-bold text-2xl">
+              🏆 Game Complete!
             </p>
-            <p className="text-slate-300 mt-2">
-              You completed all sequences!
-            </p>
-            <p className="text-yellow-400 font-semibold mt-2">
+            <p className="text-slate-400 text-lg mt-2">
               Final Score: {score}
             </p>
-            <Button onClick={handleResetGame} className="mt-4 bg-green-600 hover:bg-green-700">
+            <Button onClick={handleResetGame} className="bg-purple-600 hover:bg-purple-700 mt-4">
               Play Again
             </Button>
           </div>
         )
       
       default:
-        return null
+        return (
+          <div className="text-center">
+            <p className="text-slate-400">Loading...</p>
+          </div>
+        )
     }
   }
 

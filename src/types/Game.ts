@@ -1,5 +1,5 @@
 /**
- * Game state enum representing different phases of the Simon Says game
+ * Game state enum
  */
 export type GameState = 
   | 'IDLE'
@@ -11,34 +11,20 @@ export type GameState =
   | 'GAME_COMPLETE'
 
 /**
- * Game mode enum for different play styles
+ * Game mode enum
  */
-export type GameMode = 
-  | 'QUICK_MODE'              // Play short sequences one after another
-  | 'CHAIN_COMBINATION_MODE'  // Build long sequences incrementally by groups
+export type GameMode = 'QUICK_MODE' | 'CHAIN_COMBINATION_MODE'
 
 /**
- * Timing configuration for sequence playback
+ * Game settings interface
  */
-export interface SequenceTiming {
-  /** Duration to highlight each button in milliseconds */
-  buttonHighlightDuration: number
-  /** Pause between button highlights in milliseconds */
-  pauseBetweenButtons: number
-  /** Pause before user can start inputting in milliseconds */
-  pauseBeforeUserInput: number
-}
-
-/**
- * Group definition for chain combination mode
- */
-export interface SequenceGroup {
-  /** Unique identifier for the group */
-  id: number
-  /** Display name for the group */
-  name: string
-  /** Array of button numbers (1-8) that make up this group */
-  buttons: number[]
+export interface GameSettings {
+  /** Whether players can retry failed sequences */
+  allowRetries: boolean
+  /** Whether to show progress indicators */
+  showProgress: boolean
+  /** Whether to play sound effects */
+  playSound: boolean
 }
 
 /**
@@ -47,30 +33,8 @@ export interface SequenceGroup {
 export interface Sequence {
   /** Unique identifier for the sequence */
   id: number
-  /** Display name for the sequence */
-  name: string
-  /** Array of button numbers (1-8) that make up the sequence */
-  buttons: number[]
-  /** Groups for chain combination mode - if not provided, will be auto-generated */
-  groups?: SequenceGroup[]
-  /** Timing configuration for this sequence */
-  timing: SequenceTiming
-  /** Maximum number of attempts allowed for this sequence */
-  maxAttempts: number
-  /** Difficulty level for display purposes */
-  difficulty: 'easy' | 'medium' | 'hard'
-}
-
-/**
- * Game settings configuration
- */
-export interface GameSettings {
-  /** Whether to allow retries after failures */
-  allowRetries: boolean
-  /** Whether to show progress indicators */
-  showProgress: boolean
-  /** Whether to play sounds (future feature) */
-  playSound: boolean
+  /** Array of button numbers (1-8) or nested arrays for chain combination mode */
+  sequence: number[] | number[][]
 }
 
 /**
@@ -81,8 +45,6 @@ export interface GameConfig {
   quickModeSequences: Sequence[]
   /** Chain combination mode sequences (long sequences) */
   chainCombinationModeSequences: Sequence[]
-  /** Global game settings */
-  gameSettings: GameSettings
 }
 
 /**

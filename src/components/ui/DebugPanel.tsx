@@ -34,7 +34,7 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             <span className="text-green-400">[{currentSequenceButtons.join(', ')}]</span>
           </p>
         )}
-        {gameState.gameMode === 'ADDITIVE' && (
+        {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
           <p>
             <span className="text-slate-500">Level:</span>{' '}
             <span className="text-orange-400">

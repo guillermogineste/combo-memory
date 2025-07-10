@@ -1,6 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+import { UI_TIMING } from "@/constants/gameConstants"
 
 const gameButtonVariants = cva(
   "relative inline-flex items-center justify-center rounded-lg text-2xl font-bold text-white transition-all duration-200 select-none cursor-pointer border-4 border-opacity-20 shadow-lg",
@@ -90,7 +91,7 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
       
       // Visual feedback
       setIsCurrentlyPressed(true)
-      setTimeout(() => setIsCurrentlyPressed(false), 150)
+      setTimeout(() => setIsCurrentlyPressed(false), UI_TIMING.buttonPressedDuration)
       
       // Call the game-specific click handler
       if (onGameClick) {
@@ -119,4 +120,4 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
 
 GameButton.displayName = "GameButton"
 
-export { GameButton, gameButtonVariants } 
+export { GameButton } 
