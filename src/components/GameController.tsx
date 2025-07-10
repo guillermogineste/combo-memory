@@ -3,17 +3,18 @@ import { GameBoard } from './ui/GameBoard'
 import { Button } from './ui/button'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
-import type { GameMode } from '@/types/Game'
+import type { GameMode, GameStateData } from '@/types/Game'
 
 export interface GameControllerProps {
   className?: string
+  onDebugUpdate?: (data: { gameState: GameStateData; currentSequenceButtons: number[] }) => void
 }
 
 /**
  * GameController component that manages the entire Simon Says game flow
  * Coordinates game state management and sequence playback
  */
-export const GameController: React.FC<GameControllerProps> = ({ className }) => {
+export const GameController: React.FC<GameControllerProps> = ({ className, onDebugUpdate }) => {
   const {
     gameState,
     dispatch,
@@ -23,8 +24,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className }) => 
     checkUserInput,
     nextSequence,
     retrySequence,
-    resetGame,
-    getCurrentSequenceButtons
+    resetGame
   } = useGameState()
 
   const [highlightedButton, setHighlightedButton] = useState<number | null>(null)
@@ -118,6 +118,16 @@ export const GameController: React.FC<GameControllerProps> = ({ className }) => 
       return () => clearTimeout(timer)
     }
   }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, startSequence])
+
+  // Update debug panel data
+  useEffect(() => {
+    if (onDebugUpdate) {
+      onDebugUpdate({
+        gameState,
+        currentSequenceButtons
+      })
+    }
+  }, [gameState, currentSequenceButtons, onDebugUpdate])
 
   // Handle game mode selection
   const handleGameModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -359,17 +369,6 @@ export const GameController: React.FC<GameControllerProps> = ({ className }) => 
         highlightedButton={highlightedButton}
       />
 
-      {/* Debug Info */}
-      <div className="text-center text-xs text-slate-500">
-        <p>State: {gameState.currentState}</p>
-        <p>User Input: [{gameState.userInput.join(', ')}]</p>
-        {gameState.currentSequence && (
-          <p>Expected: [{currentSequenceButtons.join(', ')}]</p>
-        )}
-        {gameState.gameMode === 'ADDITIVE' && (
-          <p>Level: {gameState.currentAdditiveLevel + 1}/{gameState.maxAdditiveLevel + 1}</p>
-        )}
-      </div>
     </div>
   )
 } 
