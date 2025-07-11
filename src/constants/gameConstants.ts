@@ -20,6 +20,16 @@ export const GAME_TIMING = {
 export const MAX_ATTEMPTS = 3
 
 /**
+ * Number of sequences to select for each game mode
+ */
+export const SEQUENCES_PER_GAME = {
+  /** Number of sequences to select for quick mode */
+  QUICK_MODE: 5,
+  /** Number of sequences to select for chain combination mode */
+  CHAIN_COMBINATION_MODE: 3,
+} as const
+
+/**
  * Global game settings
  */
 export const GAME_SETTINGS = {

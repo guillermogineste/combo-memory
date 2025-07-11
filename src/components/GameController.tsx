@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { GameBoard } from './ui/GameBoard'
-import { Button } from './ui/button'
+import { GameHeader } from './ui/GameHeader'
+import { GameModeSelector } from './ui/GameModeSelector'
+import { GameStatus } from './ui/GameStatus'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
 import { UI_TIMING } from '@/constants/gameConstants'
@@ -21,6 +23,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     dispatch,
     setGameMode,
     startSequence,
+    startGameWithRandomSequences,
     addUserInput,
     checkUserInput,
     nextSequence,
@@ -102,23 +105,26 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     }
   }, [gameState.currentState, nextSequence])
 
-  // Auto-start next sequence after progression
+  // Auto-start next sequence after progression or initial game start
   useEffect(() => {
-    if (gameState.currentState === 'IDLE' && 
-        gameState.currentSequence && 
-        (gameState.currentSequenceIndex > 0 || gameState.currentAdditiveLevel > 0)) {
-      // If we're in IDLE state with a sequence and not on the first sequence/level,
-      // it means we just progressed to a new sequence/level, so auto-start it
+    if (gameState.currentState === 'IDLE' && gameState.currentSequence) {
+      // Check if we should auto-start:
+      // 1. We've progressed to a new sequence/level (not first sequence/level)
+      // 2. We just started a new game with random sequences (first sequence, but sequences array is populated)
+      const shouldAutoStart = (gameState.currentSequenceIndex > 0 || gameState.currentAdditiveLevel > 0) ||
+                             (gameState.currentSequenceIndex === 0 && gameState.currentAdditiveLevel === 0 && gameState.sequences.length > 0)
       
-      console.log('Auto-start triggered - Level:', gameState.currentAdditiveLevel, 'Sequence:', gameState.currentSequenceIndex) // Debug log
-      
-      const timer = setTimeout(() => {
-        startSequence(gameState.currentSequenceIndex)
-      }, UI_TIMING.autoStartDelay)
+      if (shouldAutoStart) {
+        console.log('Auto-start triggered - Level:', gameState.currentAdditiveLevel, 'Sequence:', gameState.currentSequenceIndex) // Debug log
+        
+        const timer = setTimeout(() => {
+          startSequence(gameState.currentSequenceIndex)
+        }, UI_TIMING.autoStartDelay)
 
-      return () => clearTimeout(timer)
+        return () => clearTimeout(timer)
+      }
     }
-  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, startSequence])
+  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, gameState.sequences.length, startSequence])
 
   // Update debug panel data
   useEffect(() => {
@@ -131,8 +137,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   }, [gameState, currentSequenceButtons, onDebugUpdate])
 
   // Handle game mode selection
-  const handleGameModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const mode = e.target.value as GameMode
+  const handleGameModeChange = (mode: GameMode) => {
     setGameMode(mode)
     // Reset game when mode changes
     resetGame()
@@ -140,7 +145,13 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
   // Handle start game button
   const handleStartGame = () => {
-    startSequence(0)
+    if (!gameState.currentSequence) {
+      // Starting a new game - select random sequences
+      startGameWithRandomSequences()
+    } else {
+      // Continue with current sequence
+      startSequence(gameState.currentSequenceIndex)
+    }
   }
 
   // Handle retry button
@@ -157,196 +168,26 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     setHighlightedButton(null)
   }
 
-  // Get current level info for chain combination mode
-  const getCurrentLevelInfo = () => {
-    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
-      return `Level ${gameState.currentAdditiveLevel + 1}/${gameState.maxAdditiveLevel + 1}`
-    }
-    return ''
-  }
 
-  // Get current sequence description
-  const getCurrentSequenceDescription = () => {
-    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
-      return `Sequence ${gameState.currentSequence.id}`
-    }
-    return `Sequence ${gameState.currentSequence?.id || ''}`
-  }
-
-  // Render game mode selection
-  const renderGameModeSelection = () => {
-    if (gameState.currentState !== 'IDLE' || gameState.currentSequence) {
-      return null
-    }
-
-    return (
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Select Game Mode</h2>
-        <div className="flex flex-col items-center space-y-2">
-          <select
-            value={gameState.gameMode}
-            onChange={handleGameModeChange}
-            className="px-4 py-2 bg-slate-700 text-white rounded-md border border-slate-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[200px]"
-          >
-            <option value="QUICK_MODE">Quick Mode</option>
-            <option value="CHAIN_COMBINATION_MODE">Chain Combination Mode</option>
-          </select>
-          <div className="text-sm text-slate-400 text-center max-w-md">
-            {gameState.gameMode === 'QUICK_MODE' && 'Play short sequences one after another'}
-            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && 'Build long sequences incrementally by groups'}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Render game status
-  const renderGameStatus = () => {
-    const { currentState, currentSequence, score, errorMessage } = gameState
-    const levelInfo = getCurrentLevelInfo()
-    const sequenceDescription = getCurrentSequenceDescription()
-
-    switch (currentState) {
-      case 'IDLE':
-        return (
-          <div className="text-center">
-            <p className="text-slate-300 mb-4">
-              {currentSequence ? (
-                <>
-                  Ready to play: {sequenceDescription}
-                  {levelInfo && <span className="text-yellow-400 ml-2">({levelInfo})</span>}
-                </>
-              ) : 'Ready to start!'}
-            </p>
-            <Button onClick={handleStartGame} className="bg-blue-600 hover:bg-blue-700">
-              {currentSequence ? 'Start Sequence' : 'Start Game'}
-            </Button>
-          </div>
-        )
-      
-      case 'SHOWING_SEQUENCE':
-        return (
-          <div className="text-center">
-            <p className="text-yellow-400 font-semibold">
-              Watch the sequence: {sequenceDescription}
-              {levelInfo && <span className="text-slate-300 ml-2">({levelInfo})</span>}
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Memorize the pattern...
-            </p>
-            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
-              <p className="text-slate-500 text-xs mt-1">
-                Playing buttons: [{currentSequenceButtons.join(', ')}]
-              </p>
-            )}
-          </div>
-        )
-      
-      case 'WAITING_FOR_INPUT':
-        return (
-          <div className="text-center">
-            <p className="text-green-400 font-semibold">
-              Your turn! Repeat the sequence
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Click the buttons in the correct order
-            </p>
-            {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && (
-              <p className="text-slate-500 text-xs mt-1">
-                Expected: [{currentSequenceButtons.join(', ')}]
-              </p>
-            )}
-          </div>
-        )
-      
-      case 'SUCCESS':
-        return (
-          <div className="text-center">
-            <p className="text-green-400 font-bold text-lg">
-              🎉 Perfect! Well done!
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentAdditiveLevel < gameState.maxAdditiveLevel
-                ? 'Moving to next level...'
-                : 'Moving to next sequence...'}
-            </p>
-          </div>
-        )
-      
-      case 'FAILURE':
-        return (
-          <div className="text-center">
-            <p className="text-red-400 font-bold text-lg">
-              ❌ Incorrect sequence!
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              {errorMessage || 'Try again'}
-            </p>
-            <div className="mt-4 space-x-2">
-              <Button onClick={handleRetry} className="bg-yellow-600 hover:bg-yellow-700">
-                Retry
-              </Button>
-              <Button onClick={handleResetGame} variant="outline">
-                Reset Game
-              </Button>
-            </div>
-          </div>
-        )
-      
-      case 'GAME_COMPLETE':
-        return (
-          <div className="text-center">
-            <p className="text-purple-400 font-bold text-2xl">
-              🏆 Game Complete!
-            </p>
-            <p className="text-slate-400 text-lg mt-2">
-              Final Score: {score}
-            </p>
-            <Button onClick={handleResetGame} className="bg-purple-600 hover:bg-purple-700 mt-4">
-              Play Again
-            </Button>
-          </div>
-        )
-      
-      default:
-        return (
-          <div className="text-center">
-            <p className="text-slate-400">Loading...</p>
-          </div>
-        )
-    }
-  }
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
       {/* Game Header */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-2">Simon Says</h1>
-        <div className="flex items-center justify-center space-x-6 text-sm">
-          <span className="text-slate-300">
-            Sequence: {gameState.currentSequenceIndex + 1}/{gameState.sequences.length}
-          </span>
-          {gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence && (
-            <span className="text-green-400">
-              {getCurrentLevelInfo()}
-            </span>
-          )}
-          <span className="text-yellow-400">
-            Score: {gameState.score}
-          </span>
-          <span className="text-blue-400">
-            Mode: {gameState.gameMode}
-          </span>
-        </div>
-      </div>
+      <GameHeader gameState={gameState} />
 
       {/* Game Mode Selection */}
-      {renderGameModeSelection()}
+      <GameModeSelector 
+        gameState={gameState} 
+        onGameModeChange={handleGameModeChange}
+      />
 
       {/* Game Status */}
-      <div className="min-h-[100px] flex items-center justify-center">
-        {renderGameStatus()}
-      </div>
+      <GameStatus 
+        gameState={gameState}
+        onStartGame={handleStartGame}
+        onRetry={handleRetry}
+        onResetGame={handleResetGame}
+      />
 
       {/* Game Board */}
       <GameBoard
