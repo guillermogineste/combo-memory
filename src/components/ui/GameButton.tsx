@@ -4,23 +4,12 @@ import { cn } from "@/lib/utils"
 import { UI_TIMING } from "@/constants/gameConstants"
 
 const gameButtonVariants = cva(
-  "relative inline-flex items-center justify-center rounded-lg text-2xl font-bold text-white transition-all duration-200 select-none cursor-pointer border-4 border-opacity-20 shadow-lg",
+  "relative inline-flex items-center justify-center rounded-lg text-2xl font-bold text-white transition-all duration-200 select-none cursor-pointer border-4 border-opacity-20 shadow-lg bg-custom-red hover:bg-custom-red border-custom-red",
   {
     variants: {
-      variant: {
-        default: "bg-slate-600 hover:bg-slate-500 border-slate-400",
-        red: "bg-red-600 hover:bg-red-500 border-red-400",
-        blue: "bg-blue-600 hover:bg-blue-500 border-blue-400",
-        green: "bg-green-600 hover:bg-green-500 border-green-400",
-        yellow: "bg-yellow-600 hover:bg-yellow-500 border-yellow-400",
-        purple: "bg-purple-600 hover:bg-purple-500 border-purple-400",
-        orange: "bg-orange-600 hover:bg-orange-500 border-orange-400",
-        pink: "bg-pink-600 hover:bg-pink-500 border-pink-400",
-        cyan: "bg-cyan-600 hover:bg-cyan-500 border-cyan-400",
-      },
       state: {
         normal: "",
-        active: "ring-4 ring-white ring-opacity-60 scale-105 brightness-150",
+        active: "ring-4 ring-white ring-opacity-60 scale-105 brightness-150 bg-custom-red-light hover:bg-custom-red-light border-custom-red-light",
         pressed: "scale-95 brightness-125",
         disabled: "opacity-50 cursor-not-allowed",
       },
@@ -33,7 +22,6 @@ const gameButtonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
       state: "normal",
       size: "default",
     },
@@ -53,7 +41,6 @@ export interface GameButtonProps
 /**
  * GameButton component for Simon Says game
  * @param number - The number displayed on the button (1-8)
- * @param variant - The color variant of the button
  * @param isActive - Whether the button is currently active (highlighted)
  * @param isPressed - Whether the button is currently being pressed
  * @param isDisabled - Whether the button is disabled
@@ -62,7 +49,6 @@ export interface GameButtonProps
 const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
   ({ 
     className, 
-    variant, 
     size, 
     number, 
     isActive = false, 
@@ -107,7 +93,7 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(gameButtonVariants({ variant, state: buttonState, size, className }))}
+        className={cn(gameButtonVariants({ state: buttonState, size, className }))}
         onClick={handleClick}
         disabled={isDisabled && !isActive}
         {...props}

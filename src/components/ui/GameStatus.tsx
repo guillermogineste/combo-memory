@@ -54,6 +54,11 @@ export const GameStatus: React.FC<GameStatusProps> = ({
     return 'Moving to next sequence...'
   }
 
+  // Custom button styles for status buttons
+  const statusButtonStyles = "bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black border-b-[8px]"
+  const retryButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px]"
+  const resetButtonStyles = "bg-white hover:bg-white/90 text-black border-[3px] border-black border-b-[8px]"
+
   const { currentState, currentSequence, score, errorMessage } = gameState
   const levelInfo = getCurrentLevelInfo()
   const sequenceDescription = getCurrentSequenceDescription()
@@ -63,7 +68,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
       case 'GAME_NOT_STARTED':
         return (
           <div className="text-center">
-            <Button onClick={onStartGame} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={onStartGame} className={statusButtonStyles}>
               Start Game
             </Button>
           </div>
@@ -80,7 +85,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
                 </>
               ) : 'Ready to start!'}
             </p>
-            <Button onClick={onStartGame} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={onStartGame} className={statusButtonStyles}>
               {currentSequence ? 'Start Sequence' : 'Start Game'}
             </Button>
           </div>
@@ -133,10 +138,10 @@ export const GameStatus: React.FC<GameStatusProps> = ({
               {errorMessage || 'Try again'}
             </p>
             <div className="mt-4 space-x-2">
-              <Button onClick={onRetry} className="bg-yellow-600 hover:bg-yellow-700">
+              <Button onClick={onRetry} className={retryButtonStyles}>
                 Retry
               </Button>
-              <Button onClick={onResetGame} variant="outline">
+              <Button onClick={onResetGame} className={resetButtonStyles}>
                 Reset Game
               </Button>
             </div>
@@ -152,7 +157,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
             <p className="text-slate-400 text-lg mt-2">
               Final Score: {score}
             </p>
-            <Button onClick={onResetGame} className="bg-purple-600 hover:bg-purple-700 mt-4">
+            <Button onClick={onResetGame} className={statusButtonStyles}>
               Play Again
             </Button>
           </div>

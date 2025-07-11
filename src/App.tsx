@@ -14,7 +14,7 @@ function App() {
   })
 
   return (
-    <div className="relative min-h-screen bg-slate-900">
+    <div className="relative min-h-screen bg-custom-golden">
         <GameController onDebugUpdate={setDebugData} />
       {debugData.gameState && (
         <DebugPanel 
