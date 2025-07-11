@@ -12,18 +12,6 @@ export interface GameBoardProps {
   highlightedButton?: number | null
 }
 
-// Define button colors for each position
-const buttonColors = [
-  "red",     // Button 1
-  "blue",    // Button 2
-  "green",   // Button 3
-  "yellow",  // Button 4
-  "purple",  // Button 5
-  "orange",  // Button 6
-  "pink",    // Button 7
-  "cyan",    // Button 8
-] as const
-
 /**
  * GameBoard component for Simon Says game
  * Contains 8 buttons arranged in a 4x6 grid with varying spans
@@ -124,19 +112,17 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
     const createGameButton = (buttonNumber: number) => {
       const isActive = isButtonActive(buttonNumber)
       const isDisabled = isButtonDisabled(buttonNumber)
-      const colorVariant = buttonColors[buttonNumber - 1]
 
-             return (
-         <GameButton
-           key={buttonNumber}
-           number={buttonNumber}
-           variant={colorVariant}
-           size="flexible"
-           isActive={isActive}
-           isDisabled={isDisabled}
-           onGameClick={handleButtonClick}
-         />
-       )
+      return (
+        <GameButton
+          key={buttonNumber}
+          number={buttonNumber}
+          size="flexible"
+          isActive={isActive}
+          isDisabled={isDisabled}
+          onGameClick={handleButtonClick}
+        />
+      )
     }
 
     return (
