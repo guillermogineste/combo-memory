@@ -13,13 +13,23 @@ export interface GameBoardProps {
 }
 
 /**
+ * Button configuration for the 4x6 grid layout
+ * Each button has its number and grid position
+ */
+const BUTTON_CONFIG = [
+  { number: 1, colStart: 2, rowStart: 1, rowSpan: 2 },
+  { number: 2, colStart: 3, rowStart: 1, rowSpan: 2 },
+  { number: 3, colStart: 1, rowStart: 2, rowSpan: 2 },
+  { number: 4, colStart: 4, rowStart: 2, rowSpan: 2 },
+  { number: 5, colStart: 2, rowStart: 3, rowSpan: 3 },
+  { number: 6, colStart: 3, rowStart: 3, rowSpan: 3 },
+  { number: 7, colStart: 1, rowStart: 5, rowSpan: 2 },
+  { number: 8, colStart: 4, rowStart: 5, rowSpan: 2 },
+] as const
+
+/**
  * GameBoard component for Simon Says game
  * Contains 8 buttons arranged in a 4x6 grid with varying spans
- * @param onButtonClick - Callback when a button is clicked
- * @param activeButtons - Array of button numbers that should be highlighted
- * @param disabledButtons - Array of button numbers that should be disabled
- * @param gameState - Current game state to determine button behavior
- * @param highlightedButton - Button number that should be highlighted during sequence playback
  */
 const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
   ({ 
@@ -32,96 +42,67 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
     ...props 
   }, ref) => {
     
+    /**
+     * Handle button click with game state validation
+     */
     const handleButtonClick = (buttonNumber: number) => {
       // Only allow clicks during WAITING_FOR_INPUT state
       if (gameState && gameState !== 'WAITING_FOR_INPUT') {
-        console.log(`GameBoard: Button ${buttonNumber} clicked but game state is ${gameState}`) // Debug log
+        console.log(`GameBoard: Button ${buttonNumber} clicked but game state is ${gameState}`)
         return
       }
       
-      console.log(`GameBoard: Button ${buttonNumber} clicked`) // Debug log
+      console.log(`GameBoard: Button ${buttonNumber} clicked`)
+      onButtonClick?.(buttonNumber)
+    }
+
+    /**
+     * Determine button state based on game state and props
+     */
+    const getButtonState = (buttonNumber: number) => {
+      // Check if button should be disabled
+      const isExplicitlyDisabled = disabledButtons.includes(buttonNumber)
+      const isGameDisabled = gameState !== 'WAITING_FOR_INPUT' && gameState !== undefined
+      const isDisabled = isExplicitlyDisabled || isGameDisabled
       
-      if (onButtonClick) {
-        onButtonClick(buttonNumber)
-      }
+      // Check if button should be active/highlighted
+      const isHighlighted = highlightedButton === buttonNumber
+      const isExplicitlyActive = activeButtons.includes(buttonNumber)
+      const isActive = isHighlighted || isExplicitlyActive
+
+      return { isActive, isDisabled }
     }
 
     /**
-     * Determine if a button should be disabled based on game state
-     * @param buttonNumber - The button number to check
-     * @returns Whether the button should be disabled
+     * Render a single button with its grid positioning
      */
-    const isButtonDisabled = (buttonNumber: number): boolean => {
-      // Check explicit disabled buttons
-      if (disabledButtons.includes(buttonNumber)) {
-        return true
-      }
-
-      // Disable all buttons when game hasn't started yet
-      if (gameState === 'GAME_NOT_STARTED') {
-        return true
-      }
-
-      // Disable all buttons during sequence playback
-      if (gameState === 'SHOWING_SEQUENCE') {
-        return true
-      }
-
-      // Disable all buttons during input checking
-      if (gameState === 'CHECKING_INPUT') {
-        return true
-      }
-
-      // Disable all buttons during success/failure states
-      if (gameState === 'SUCCESS' || gameState === 'FAILURE') {
-        return true
-      }
-
-      // Disable all buttons when game is complete
-      if (gameState === 'GAME_COMPLETE') {
-        return true
-      }
-
-      return false
-    }
-
-    /**
-     * Determine if a button should be active/highlighted
-     * @param buttonNumber - The button number to check
-     * @returns Whether the button should be highlighted
-     */
-    const isButtonActive = (buttonNumber: number): boolean => {
-      // Highlight during sequence playback
-      if (highlightedButton === buttonNumber) {
-        return true
-      }
-
-      // Check explicit active buttons
-      if (activeButtons.includes(buttonNumber)) {
-        return true
-      }
-
-      return false
-    }
-
-    /**
-     * Creates a GameButton with all necessary props
-     * @param buttonNumber - The button number (1-8)
-     * @returns GameButton component
-     */
-    const createGameButton = (buttonNumber: number) => {
-      const isActive = isButtonActive(buttonNumber)
-      const isDisabled = isButtonDisabled(buttonNumber)
+    const renderButton = (config: { number: number; colStart: number; rowStart: number; rowSpan: number }) => {
+      const { number, colStart, rowStart, rowSpan } = config
+      const { isActive, isDisabled } = getButtonState(number)
 
       return (
-        <GameButton
-          key={buttonNumber}
-          number={buttonNumber}
-          size="flexible"
-          isActive={isActive}
-          isDisabled={isDisabled}
-          onGameClick={handleButtonClick}
-        />
+        <div
+          key={number}
+          className={cn(
+            "p-2.5",
+            `col-start-${colStart}`,
+            `row-start-${rowStart}`,
+            `row-span-${rowSpan}`
+          )}
+          style={{
+            gridColumnStart: colStart,
+            gridRowStart: rowStart,
+            gridRowEnd: `span ${rowSpan}`,
+          }}
+        >
+          <GameButton
+            number={number}
+            size="flexible"
+            isActive={isActive}
+            isDisabled={isDisabled}
+            onGameClick={handleButtonClick}
+          />
+        </div>
       )
     }
 
@@ -129,66 +110,12 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
       <div
         ref={ref}
         className={cn(
-          "grid grid-cols-4 grid-rows-6 gap-4 [grid-gap:16px] w-[480px] h-[360px] mx-auto",
+          "grid grid-cols-4 grid-rows-6 gap-4 w-[480px] h-[360px] mx-auto",
           className
         )}
         {...props}
       >
-        {/* Button 1 - Column 2, Rows 1-2 (spans 2 rows) */}
-        <div className="col-start-2 row-start-1 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(1)}
-          </div>
-        </div>
-
-        {/* Button 2 - Column 3, Rows 1-2 (spans 2 rows) */}
-        <div className="col-start-3 row-start-1 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(2)}
-          </div>
-        </div>
-
-        {/* Button 3 - Column 1, Rows 2-3 (spans 2 rows) */}
-        <div className="col-start-1 row-start-2 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(3)}
-          </div>
-        </div>
-
-        {/* Button 4 - Column 4, Rows 2-3 (spans 2 rows) */}
-        <div className="col-start-4 row-start-2 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(4)}
-          </div>
-        </div>
-
-        {/* Button 5 - Column 2, Rows 3-5 (spans 3 rows) */}
-        <div className="col-start-2 row-start-3 row-span-3">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(5)}
-          </div>
-        </div>
-
-        {/* Button 6 - Column 3, Rows 3-5 (spans 3 rows) */}
-        <div className="col-start-3 row-start-3 row-span-3">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(6)}
-          </div>
-        </div>
-
-        {/* Button 7 - Column 1, Rows 5-6 (spans 2 rows) */}
-        <div className="col-start-1 row-start-5 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(7)}
-          </div>
-        </div>
-
-        {/* Button 8 - Column 4, Rows 5-6 (spans 2 rows) */}
-        <div className="col-start-4 row-start-5 row-span-2">
-          <div className="p-2.5 w-full h-full">
-            {createGameButton(8)}
-          </div>
-        </div>
+        {BUTTON_CONFIG.map(renderButton)}
       </div>
     )
   }
