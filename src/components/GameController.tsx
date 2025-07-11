@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { GameBoard } from './ui/GameBoard'
 import { GameHeader } from './ui/GameHeader'
 import { GameModeSelector } from './ui/GameModeSelector'
 import { GameStatus } from './ui/GameStatus'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
-import { UI_TIMING } from '@/constants/gameConstants'
+import { useGameFlow } from '../hooks/useGameFlow'
 import type { GameMode, GameStateData } from '@/types/Game'
 
 export interface GameControllerProps {
@@ -18,166 +18,101 @@ export interface GameControllerProps {
  * Coordinates game state management and sequence playback
  */
 export const GameController: React.FC<GameControllerProps> = ({ className, onDebugUpdate }) => {
-  const {
-    gameState,
-    dispatch,
-    setGameMode,
-    startSequence,
-    startGameWithRandomSequences,
-    addUserInput,
-    checkUserInput,
-    nextSequence,
-    retrySequence,
-    resetGame
-  } = useGameState()
-
+  const gameState = useGameState()
   const [highlightedButton, setHighlightedButton] = useState<number | null>(null)
+
+  // Get current sequence buttons for playback
+  const currentSequenceButtons = gameState.getCurrentSequenceButtons()
+  console.log('Current sequence buttons:', currentSequenceButtons) // Debug log
 
   // Handle sequence completion
   const handleSequenceComplete = useCallback(() => {
-    dispatch({ type: 'SEQUENCE_COMPLETE' })
-  }, [dispatch])
+    gameState.dispatch({ type: 'SEQUENCE_COMPLETE' })
+  }, [gameState.dispatch])
 
   // Handle button highlighting during sequence playback
   const handleButtonHighlight = useCallback((buttonNumber: number | null) => {
     setHighlightedButton(buttonNumber)
   }, [])
 
-  // Get current sequence buttons for chain combination mode - MEMOIZED to prevent infinite loops
-  const currentSequenceButtons = useMemo(() => {
-    if (!gameState.currentSequence) return []
-    
-    if (gameState.gameMode === 'QUICK_MODE') {
-      return gameState.currentSequence.sequence as number[]
-    }
-    
-    // For chain combination mode, build cumulative sequence
-    const groups = gameState.currentSequence.sequence as number[][]
-    const buttonsToPlay: number[] = []
-    
-    // Add all buttons from groups 0 to current level
-    for (let i = 0; i <= gameState.currentAdditiveLevel && i < groups.length; i++) {
-      buttonsToPlay.push(...groups[i])
-    }
-    
-    console.log('Chain combination mode buttons:', buttonsToPlay, 'Level:', gameState.currentAdditiveLevel + 1) // Debug log
-    return buttonsToPlay
-  }, [
-    gameState.currentSequence,
-    gameState.gameMode,
-    gameState.currentAdditiveLevel
-  ])
-
-  // Initialize sequence playback hook
+  // Initialize sequence playback
   useSequencePlayback({
-    sequence: gameState.currentSequence,
-    isPlaying: gameState.currentState === 'SHOWING_SEQUENCE',
+    sequence: gameState.gameState.currentSequence,
+    isPlaying: gameState.gameState.currentState === 'SHOWING_SEQUENCE',
     onSequenceComplete: handleSequenceComplete,
     onButtonHighlight: handleButtonHighlight,
-    customButtons: gameState.gameMode === 'CHAIN_COMBINATION_MODE' ? currentSequenceButtons : undefined
+    customButtons: gameState.gameState.gameMode === 'CHAIN_COMBINATION_MODE' ? currentSequenceButtons : undefined
   })
+
+  // Handle game flow automation (auto-progress, input checking, etc.)
+  useGameFlow(gameState)
 
   // Handle user button clicks
   const handleButtonClick = useCallback((buttonNumber: number) => {
-    if (gameState.currentState !== 'WAITING_FOR_INPUT') {
+    if (gameState.gameState.currentState !== 'WAITING_FOR_INPUT') {
+      console.log('Button click ignored - not waiting for input') // Debug log
       return
     }
 
-    addUserInput(buttonNumber)
-  }, [gameState.currentState, addUserInput])
+    console.log('Button clicked:', buttonNumber) // Debug log
+    gameState.addUserInput(buttonNumber)
+  }, [gameState.gameState.currentState, gameState.addUserInput])
 
-  // Check user input whenever it changes
-  useEffect(() => {
-    if (gameState.currentState === 'WAITING_FOR_INPUT' && 
-        gameState.userInput.length > 0) {
-      checkUserInput()
+  // Handle game mode selection
+  const handleGameModeChange = useCallback((mode: GameMode) => {
+    console.log('Game mode changed to:', mode) // Debug log
+    gameState.setGameMode(mode)
+    gameState.resetGame()
+  }, [gameState.setGameMode, gameState.resetGame])
+
+  // Handle start game button
+  const handleStartGame = useCallback(() => {
+    if (!gameState.gameState.currentSequence) {
+      console.log('Starting new game with random sequences') // Debug log
+      gameState.startGameWithRandomSequences()
+    } else {
+      console.log('Continuing current game') // Debug log
+      gameState.startSequence(gameState.gameState.currentSequenceIndex)
     }
-  }, [gameState.userInput, gameState.currentState, checkUserInput])
+  }, [gameState.gameState.currentSequence, gameState.gameState.currentSequenceIndex, gameState.startGameWithRandomSequences, gameState.startSequence])
 
-  // Auto-progress after success
-  useEffect(() => {
-    if (gameState.currentState === 'SUCCESS') {
-      const timer = setTimeout(() => {
-        nextSequence()
-      }, UI_TIMING.successDelay)
+  // Handle retry button
+  const handleRetry = useCallback(() => {
+    console.log('Retrying current sequence') // Debug log
+    gameState.retrySequence()
+  }, [gameState.retrySequence])
 
-      return () => clearTimeout(timer)
-    }
-  }, [gameState.currentState, nextSequence])
-
-  // Auto-start next sequence after progression between sequences/levels during active game
-  useEffect(() => {
-    if (gameState.currentState === 'IDLE' && gameState.currentSequence) {
-      // Only auto-start when in IDLE state (between sequences/levels in active game)
-      // GAME_NOT_STARTED state requires explicit user action to start
-      console.log('Auto-start triggered - Level:', gameState.currentAdditiveLevel, 'Sequence:', gameState.currentSequenceIndex) // Debug log
-      
-      const timer = setTimeout(() => {
-        startSequence(gameState.currentSequenceIndex)
-      }, UI_TIMING.autoStartDelay)
-
-      return () => clearTimeout(timer)
-    }
-  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, startSequence])
+  // Handle reset game
+  const handleResetGame = useCallback(() => {
+    console.log('Resetting game') // Debug log
+    gameState.resetGame()
+    setHighlightedButton(null)
+  }, [gameState.resetGame])
 
   // Update debug panel data
   useEffect(() => {
     if (onDebugUpdate) {
       onDebugUpdate({
-        gameState,
+        gameState: gameState.gameState,
         currentSequenceButtons
       })
     }
-  }, [gameState, currentSequenceButtons, onDebugUpdate])
-
-  // Handle game mode selection
-  const handleGameModeChange = (mode: GameMode) => {
-    setGameMode(mode)
-    // Reset game when mode changes
-    resetGame()
-  }
-
-  // Handle start game button
-  const handleStartGame = () => {
-    if (!gameState.currentSequence) {
-      // Starting a new game - select random sequences
-      startGameWithRandomSequences()
-    } else {
-      // Continue with current sequence
-      startSequence(gameState.currentSequenceIndex)
-    }
-  }
-
-  // Handle retry button
-  const handleRetry = () => {
-    retrySequence()
-    setTimeout(() => {
-      startSequence(gameState.currentSequenceIndex)
-    }, UI_TIMING.autoStartDelay)
-  }
-
-  // Handle reset game
-  const handleResetGame = () => {
-    resetGame()
-    setHighlightedButton(null)
-  }
-
-
+  }, [gameState.gameState, currentSequenceButtons, onDebugUpdate])
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
       {/* Game Header */}
-      <GameHeader gameState={gameState} />
+      <GameHeader gameState={gameState.gameState} />
 
       {/* Game Mode Selection */}
       <GameModeSelector 
-        gameState={gameState} 
+        gameState={gameState.gameState} 
         onGameModeChange={handleGameModeChange}
       />
 
       {/* Game Status */}
       <GameStatus 
-        gameState={gameState}
+        gameState={gameState.gameState}
         onStartGame={handleStartGame}
         onRetry={handleRetry}
         onResetGame={handleResetGame}
@@ -186,10 +121,9 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       {/* Game Board */}
       <GameBoard
         onButtonClick={handleButtonClick}
-        gameState={gameState.currentState}
+        gameState={gameState.gameState.currentState}
         highlightedButton={highlightedButton}
       />
-
     </div>
   )
 } 
