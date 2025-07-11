@@ -16,8 +16,11 @@ export const GameModeSelector: React.FC<GameModeSelectorProps> = ({
   onGameModeChange, 
   className 
 }) => {
-  // Only show mode selector when game is idle and no current sequence
-  if (gameState.currentState !== 'IDLE' || gameState.currentSequence) {
+  // Only show mode selector when game hasn't started or is idle with no current sequence
+  if (gameState.currentState === 'GAME_NOT_STARTED' || 
+      (gameState.currentState === 'IDLE' && !gameState.currentSequence)) {
+    // Show the mode selector
+  } else {
     return null
   }
 

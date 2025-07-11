@@ -30,7 +30,7 @@ type GameAction =
  * Initial game state
  */
 const initialGameState: GameStateData = {
-  currentState: 'IDLE',
+  currentState: 'GAME_NOT_STARTED',
   gameMode: 'QUICK_MODE',
   currentSequenceIndex: 0,
   currentSequence: null,
@@ -115,6 +115,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       
       return {
         ...initialGameState,
+        currentState: 'GAME_NOT_STARTED',
         sequences,
         gameSettings: GAME_SETTINGS
       }
@@ -153,6 +154,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       
       return {
         ...state,
+        currentState: 'IDLE',
         sequences: selectedSequences,
         currentSequenceIndex: 0,
         currentSequence: selectedSequences[0] || null,
@@ -301,6 +303,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
     case 'RESET_GAME':
       return {
         ...initialGameState,
+        currentState: 'GAME_NOT_STARTED',
         gameMode: state.gameMode, // Preserve the current game mode
         sequences: state.sequences,
         gameSettings: GAME_SETTINGS

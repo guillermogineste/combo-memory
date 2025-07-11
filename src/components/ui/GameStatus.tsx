@@ -60,6 +60,15 @@ export const GameStatus: React.FC<GameStatusProps> = ({
 
   const renderStatusContent = () => {
     switch (currentState) {
+      case 'GAME_NOT_STARTED':
+        return (
+          <div className="text-center">
+            <Button onClick={onStartGame} className="bg-blue-600 hover:bg-blue-700">
+              Start Game
+            </Button>
+          </div>
+        )
+      
       case 'IDLE':
         return (
           <div className="text-center">

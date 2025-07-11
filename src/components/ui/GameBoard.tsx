@@ -69,6 +69,11 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
         return true
       }
 
+      // Disable all buttons when game hasn't started yet
+      if (gameState === 'GAME_NOT_STARTED') {
+        return true
+      }
+
       // Disable all buttons during sequence playback
       if (gameState === 'SHOWING_SEQUENCE') {
         return true

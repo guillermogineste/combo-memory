@@ -24,7 +24,6 @@ export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) 
 
   return (
     <div className={`text-center ${className}`}>
-      <h1 className="text-4xl font-bold text-white mb-2">Simon Says</h1>
       <div className="flex items-center justify-center space-x-6 text-sm">
         <span className="text-slate-300">
           Sequence: {gameState.currentSequenceIndex + 1}/{gameState.sequences.length}

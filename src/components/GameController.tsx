@@ -105,26 +105,20 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     }
   }, [gameState.currentState, nextSequence])
 
-  // Auto-start next sequence after progression or initial game start
+  // Auto-start next sequence after progression between sequences/levels during active game
   useEffect(() => {
     if (gameState.currentState === 'IDLE' && gameState.currentSequence) {
-      // Check if we should auto-start:
-      // 1. We've progressed to a new sequence/level (not first sequence/level)
-      // 2. We just started a new game with random sequences (first sequence, but sequences array is populated)
-      const shouldAutoStart = (gameState.currentSequenceIndex > 0 || gameState.currentAdditiveLevel > 0) ||
-                             (gameState.currentSequenceIndex === 0 && gameState.currentAdditiveLevel === 0 && gameState.sequences.length > 0)
+      // Only auto-start when in IDLE state (between sequences/levels in active game)
+      // GAME_NOT_STARTED state requires explicit user action to start
+      console.log('Auto-start triggered - Level:', gameState.currentAdditiveLevel, 'Sequence:', gameState.currentSequenceIndex) // Debug log
       
-      if (shouldAutoStart) {
-        console.log('Auto-start triggered - Level:', gameState.currentAdditiveLevel, 'Sequence:', gameState.currentSequenceIndex) // Debug log
-        
-        const timer = setTimeout(() => {
-          startSequence(gameState.currentSequenceIndex)
-        }, UI_TIMING.autoStartDelay)
+      const timer = setTimeout(() => {
+        startSequence(gameState.currentSequenceIndex)
+      }, UI_TIMING.autoStartDelay)
 
-        return () => clearTimeout(timer)
-      }
+      return () => clearTimeout(timer)
     }
-  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, gameState.sequences.length, startSequence])
+  }, [gameState.currentState, gameState.currentSequence, gameState.currentSequenceIndex, gameState.currentAdditiveLevel, startSequence])
 
   // Update debug panel data
   useEffect(() => {
