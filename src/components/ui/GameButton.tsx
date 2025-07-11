@@ -12,6 +12,8 @@ const gameButtonVariants = cva(
         active: "ring-4 ring-white ring-opacity-60 scale-105 brightness-150 bg-custom-red-light hover:bg-custom-red-light border-custom-red-light",
         pressed: "scale-95 brightness-125",
         disabled: "opacity-50 cursor-not-allowed",
+        success: "bg-green-500 hover:bg-green-500 border-green-500 ring-4 ring-green-300 ring-opacity-60 scale-105 brightness-150",
+        fail: "bg-red-600 hover:bg-red-600 border-red-600 ring-4 ring-red-300 ring-opacity-60 scale-105 brightness-150",
       },
       size: {
         default: "h-[120px] w-[120px]",
@@ -35,6 +37,8 @@ export interface GameButtonProps
   isActive?: boolean
   isPressed?: boolean
   isDisabled?: boolean
+  isSuccess?: boolean
+  isFail?: boolean
   onGameClick?: (number: number) => void
 }
 
@@ -44,6 +48,8 @@ export interface GameButtonProps
  * @param isActive - Whether the button is currently active (highlighted)
  * @param isPressed - Whether the button is currently being pressed
  * @param isDisabled - Whether the button is disabled
+ * @param isSuccess - Whether the button should show success state (green)
+ * @param isFail - Whether the button should show fail state (red)
  * @param onGameClick - Callback when the button is clicked, receives the button number
  */
 const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
@@ -54,6 +60,8 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
     isActive = false, 
     isPressed = false, 
     isDisabled = false, 
+    isSuccess = false,
+    isFail = false,
     onGameClick,
     onClick,
     ...props 
@@ -61,17 +69,21 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
     const [isCurrentlyPressed, setIsCurrentlyPressed] = React.useState(false)
 
     // Determine the button state based on props
-    // Allow active state to show even when disabled (for sequence playback)
-    const buttonState = isActive 
-      ? 'active' 
-      : isDisabled 
-        ? 'disabled' 
-        : (isPressed || isCurrentlyPressed) 
-          ? 'pressed' 
-          : 'normal'
+    // Priority: success/fail > active > disabled > pressed > normal
+    const getButtonState = () => {
+      if (isSuccess) return 'success'
+      if (isFail) return 'fail'
+      if (isActive) return 'active'
+      if (isDisabled) return 'disabled'
+      if (isPressed || isCurrentlyPressed) return 'pressed'
+      return 'normal'
+    }
+
+    const buttonState = getButtonState()
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (isDisabled) return
+      // Don't allow clicks when in success/fail state or disabled
+      if (isDisabled || isSuccess || isFail) return
       
       console.log(`Game button ${number} clicked`) // Debug log
       

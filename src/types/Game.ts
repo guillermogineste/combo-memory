@@ -75,4 +75,8 @@ export interface GameStateData {
   gameSettings: GameSettings
   /** Error message if any */
   errorMessage: string | null
+  /** Last pressed button number (1-8) */
+  lastPressedButton: number | null
+  /** Result of the last pressed button (success, fail, or null) */
+  lastButtonResult: 'success' | 'fail' | null
 } 

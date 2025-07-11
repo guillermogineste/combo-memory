@@ -6,6 +6,7 @@ import { GameStatus } from './ui/GameStatus'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
 import { useGameFlow } from '../hooks/useGameFlow'
+import { UI_TIMING } from '@/constants/gameConstants'
 import type { GameMode, GameStateData } from '@/types/Game'
 
 export interface GameControllerProps {
@@ -24,6 +25,18 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   // Get current sequence buttons for playback
   const currentSequenceButtons = gameState.getCurrentSequenceButtons()
   console.log('Current sequence buttons:', currentSequenceButtons) // Debug log
+
+  // Auto-clear button states after success/fail
+  useEffect(() => {
+    if (gameState.gameState.lastButtonResult === 'success' || gameState.gameState.lastButtonResult === 'fail') {
+      console.log('Button result detected, clearing states in 1 second:', gameState.gameState.lastButtonResult) // Debug log
+      const timer = setTimeout(() => {
+        gameState.clearButtonStates()
+      }, UI_TIMING.buttonStateDisplayDuration) // Use shorter duration for button state clearing
+
+      return () => clearTimeout(timer)
+    }
+  }, [gameState.gameState.lastButtonResult, gameState.clearButtonStates])
 
   // Handle sequence completion
   const handleSequenceComplete = useCallback(() => {
@@ -123,6 +136,8 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
         onButtonClick={handleButtonClick}
         gameState={gameState.gameState.currentState}
         highlightedButton={highlightedButton}
+        lastPressedButton={gameState.gameState.lastPressedButton}
+        lastButtonResult={gameState.gameState.lastButtonResult}
       />
     </div>
   )

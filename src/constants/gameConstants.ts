@@ -56,9 +56,11 @@ export const SCORING = {
  */
 export const UI_TIMING = {
   /** Time to wait before progressing to next sequence after success */
-  successDelay: 1500,
+  successDelay: 2000,
   /** Time to wait before auto-starting next sequence/level */
   autoStartDelay: 500,
   /** Duration of button press visual feedback */
   buttonPressedDuration: 150,
+  /** Time to show success/fail state on button before clearing */
+  buttonStateDisplayDuration: 1000,
 } as const 

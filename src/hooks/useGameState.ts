@@ -25,6 +25,7 @@ type GameAction =
   | { type: 'RETRY_SEQUENCE' }
   | { type: 'GAME_COMPLETE' }
   | { type: 'RESET_GAME' }
+  | { type: 'CLEAR_BUTTON_STATES' }
 
 /**
  * Initial game state
@@ -41,7 +42,9 @@ const initialGameState: GameStateData = {
   score: 0,
   sequences: [],
   gameSettings: GAME_SETTINGS,
-  errorMessage: null
+  errorMessage: null,
+  lastPressedButton: null,
+  lastButtonResult: null
 }
 
 /**
@@ -182,7 +185,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentAdditiveLevel: additiveLevel,
         maxAdditiveLevel: maxLevel,
         userInput: [],
-        errorMessage: null
+        errorMessage: null,
+        lastPressedButton: null,
+        lastButtonResult: null
       }
 
     case 'SHOW_SEQUENCE':
@@ -206,7 +211,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
     case 'ADD_USER_INPUT':
       return {
         ...state,
-        userInput: [...state.userInput, action.buttonNumber]
+        userInput: [...state.userInput, action.buttonNumber],
+        lastPressedButton: action.buttonNumber,
+        lastButtonResult: null // Clear previous result when new input is added
       }
 
     case 'CLEAR_USER_INPUT':
@@ -232,7 +239,8 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentState: 'SUCCESS',
         score: state.score + (isChainCombinationMode ? SCORING.chainCombinationPoints : SCORING.quickModePoints),
         currentAttempt: 1,
-        errorMessage: null
+        errorMessage: null,
+        lastButtonResult: 'success'
       }
 
     case 'INPUT_FAILURE':
@@ -241,7 +249,8 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentState: 'FAILURE',
         currentAttempt: state.currentAttempt + 1,
         errorMessage: action.message,
-        userInput: []
+        userInput: [],
+        lastButtonResult: 'fail'
       }
 
     case 'NEXT_ADDITIVE_LEVEL':
@@ -254,7 +263,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         return {
           ...state,
           currentAdditiveLevel: 0,
-          currentState: 'SHOWING_SEQUENCE'
+          currentState: 'SHOWING_SEQUENCE',
+          lastPressedButton: null,
+          lastButtonResult: null
         }
       }
       
@@ -264,7 +275,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentState: 'SHOWING_SEQUENCE',
         userInput: [],
         currentAttempt: 1,
-        errorMessage: null
+        errorMessage: null,
+        lastPressedButton: null,
+        lastButtonResult: null
       }
 
     case 'NEXT_SEQUENCE':
@@ -283,7 +296,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentAdditiveLevel: 0,
         userInput: [],
         currentAttempt: 1,
-        errorMessage: null
+        errorMessage: null,
+        lastPressedButton: null,
+        lastButtonResult: null
       }
 
     case 'RETRY_SEQUENCE':
@@ -291,7 +306,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         ...state,
         currentState: 'SHOWING_SEQUENCE',
         userInput: [],
-        errorMessage: null
+        errorMessage: null,
+        lastPressedButton: null,
+        lastButtonResult: null
       }
 
     case 'GAME_COMPLETE':
@@ -307,6 +324,13 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         gameMode: state.gameMode, // Preserve the current game mode
         sequences: state.sequences,
         gameSettings: GAME_SETTINGS
+      }
+
+    case 'CLEAR_BUTTON_STATES':
+      return {
+        ...state,
+        lastPressedButton: null,
+        lastButtonResult: null
       }
 
     default:
@@ -436,6 +460,13 @@ export function useGameState() {
     return result
   }
 
+  /**
+   * Clear button states (success/fail indicators)
+   */
+  const clearButtonStates = () => {
+    dispatch({ type: 'CLEAR_BUTTON_STATES' })
+  }
+
   return {
     gameState,
     dispatch,
@@ -447,6 +478,7 @@ export function useGameState() {
     nextSequence,
     retrySequence,
     resetGame,
-    getCurrentSequenceButtons
+    getCurrentSequenceButtons,
+    clearButtonStates
   }
 } 
