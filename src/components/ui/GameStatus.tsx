@@ -12,7 +12,7 @@ export interface GameStatusProps {
 
 /**
  * GameStatus component that displays the current game status and relevant actions
- * Handles all game states: IDLE, SHOWING_SEQUENCE, WAITING_FOR_INPUT, SUCCESS, FAILURE, GAME_COMPLETE
+ * Handles all game states: GAME_NOT_STARTED, SHOWING_SEQUENCE, WAITING_FOR_INPUT, SUCCESS, FAILURE, GAME_COMPLETE
  */
 export const GameStatus: React.FC<GameStatusProps> = ({ 
   gameState, 
@@ -70,23 +70,6 @@ export const GameStatus: React.FC<GameStatusProps> = ({
           <div className="text-center">
             <Button onClick={onStartGame} className={statusButtonStyles}>
               Start Game
-            </Button>
-          </div>
-        )
-      
-      case 'IDLE':
-        return (
-          <div className="text-center">
-            <p className="text-slate-300 mb-4">
-              {currentSequence ? (
-                <>
-                  Ready to play: {sequenceDescription}
-                  {levelInfo && <span className="text-yellow-400 ml-2">({levelInfo})</span>}
-                </>
-              ) : 'Ready to start!'}
-            </p>
-            <Button onClick={onStartGame} className={statusButtonStyles}>
-              {currentSequence ? 'Start Sequence' : 'Start Game'}
             </Button>
           </div>
         )

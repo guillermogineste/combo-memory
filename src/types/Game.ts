@@ -3,7 +3,6 @@
  */
 export type GameState = 
   | 'GAME_NOT_STARTED'
-  | 'IDLE'
   | 'SHOWING_SEQUENCE'
   | 'WAITING_FOR_INPUT'
   | 'CHECKING_INPUT'

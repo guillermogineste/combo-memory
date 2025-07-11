@@ -9,16 +9,15 @@ export interface GameModeSelectorProps {
 
 /**
  * GameModeSelector component that displays the game mode selection interface
- * Only shows when game is in IDLE state and no current sequence is active
+ * Only shows when game hasn't started
  */
 export const GameModeSelector: React.FC<GameModeSelectorProps> = ({ 
   gameState, 
   onGameModeChange, 
   className 
 }) => {
-  // Only show mode selector when game hasn't started or is idle with no current sequence
-  if (gameState.currentState === 'GAME_NOT_STARTED' || 
-      (gameState.currentState === 'IDLE' && !gameState.currentSequence)) {
+  // Only show mode selector when game hasn't started
+  if (gameState.currentState === 'GAME_NOT_STARTED') {
     // Show the mode selector
   } else {
     return null

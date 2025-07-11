@@ -154,7 +154,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       
       return {
         ...state,
-        currentState: 'IDLE',
+        currentState: 'SHOWING_SEQUENCE',
         sequences: selectedSequences,
         currentSequenceIndex: 0,
         currentSequence: selectedSequences[0] || null,
@@ -254,14 +254,14 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         return {
           ...state,
           currentAdditiveLevel: 0,
-          currentState: 'IDLE'
+          currentState: 'SHOWING_SEQUENCE'
         }
       }
       
       return {
         ...state,
         currentAdditiveLevel: nextLevel,
-        currentState: 'IDLE',
+        currentState: 'SHOWING_SEQUENCE',
         userInput: [],
         currentAttempt: 1,
         errorMessage: null
@@ -279,7 +279,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         ...state,
         currentSequenceIndex: nextIndex,
         currentSequence: state.sequences[nextIndex],
-        currentState: 'IDLE',
+        currentState: 'SHOWING_SEQUENCE',
         currentAdditiveLevel: 0,
         userInput: [],
         currentAttempt: 1,
@@ -289,7 +289,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
     case 'RETRY_SEQUENCE':
       return {
         ...state,
-        currentState: 'IDLE',
+        currentState: 'SHOWING_SEQUENCE',
         userInput: [],
         errorMessage: null
       }
