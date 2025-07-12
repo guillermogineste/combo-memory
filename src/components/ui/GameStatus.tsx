@@ -21,27 +21,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   onResetGame, 
   className 
 }) => {
-  /**
-   * Get current level info for chain combination mode
-   * @returns Level information string or empty string
-   */
-  const getCurrentLevelInfo = (): string => {
-    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
-      return `Level ${gameState.currentAdditiveLevel + 1}/${gameState.maxAdditiveLevel + 1}`
-    }
-    return ''
-  }
 
-  /**
-   * Get current sequence description
-   * @returns Sequence description string
-   */
-  const getCurrentSequenceDescription = (): string => {
-    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentSequence) {
-      return `Sequence ${gameState.currentSequence.id}`
-    }
-    return `Sequence ${gameState.currentSequence?.id || ''}`
-  }
 
   /**
    * Get next progression message for success state
@@ -59,9 +39,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   const retryButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px]"
   const resetButtonStyles = "bg-white hover:bg-white/90 text-black border-[3px] border-black border-b-[8px]"
 
-  const { currentState, currentSequence, score, errorMessage } = gameState
-  const levelInfo = getCurrentLevelInfo()
-  const sequenceDescription = getCurrentSequenceDescription()
+  const { currentState, score, errorMessage } = gameState
 
   const renderStatusContent = () => {
     switch (currentState) {
@@ -77,25 +55,12 @@ export const GameStatus: React.FC<GameStatusProps> = ({
       case 'SHOWING_SEQUENCE':
         return (
           <div className="text-center">
-            <p className="text-yellow-400 font-semibold">
-              Watch the sequence: {sequenceDescription}
-              {levelInfo && <span className="text-slate-300 ml-2">({levelInfo})</span>}
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Memorize the pattern...
-            </p>
           </div>
         )
       
       case 'WAITING_FOR_INPUT':
         return (
           <div className="text-center">
-            <p className="text-green-400 font-semibold">
-              Your turn! Repeat the sequence
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              Click the buttons in the correct order
-            </p>
           </div>
         )
       
