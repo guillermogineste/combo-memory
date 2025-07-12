@@ -260,10 +260,23 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
       if (nextLevel > state.maxAdditiveLevel) {
         // Completed all levels, move to next sequence
         console.log('All additive levels completed, moving to next sequence') // Debug log
+        const nextIndex = state.currentSequenceIndex + 1
+        if (nextIndex >= state.sequences.length) {
+          return {
+            ...state,
+            currentState: 'GAME_COMPLETE'
+          }
+        }
         return {
           ...state,
-          currentAdditiveLevel: 0,
+          currentSequenceIndex: nextIndex,
+          currentSequence: state.sequences[nextIndex],
           currentState: 'SHOWING_SEQUENCE',
+          currentAdditiveLevel: 0,
+          maxAdditiveLevel: state.sequences[nextIndex] ? getMaxAdditiveLevel(state.sequences[nextIndex], state.gameMode) : 0,
+          userInput: [],
+          currentAttempt: 1,
+          errorMessage: null,
           lastPressedButton: null,
           lastButtonResult: null
         }
@@ -288,12 +301,14 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
           currentState: 'GAME_COMPLETE'
         }
       }
+      const nextSequence = state.sequences[nextIndex]
       return {
         ...state,
         currentSequenceIndex: nextIndex,
-        currentSequence: state.sequences[nextIndex],
+        currentSequence: nextSequence,
         currentState: 'SHOWING_SEQUENCE',
         currentAdditiveLevel: 0,
+        maxAdditiveLevel: nextSequence ? getMaxAdditiveLevel(nextSequence, state.gameMode) : 0,
         userInput: [],
         currentAttempt: 1,
         errorMessage: null,

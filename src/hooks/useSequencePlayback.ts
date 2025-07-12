@@ -71,7 +71,13 @@ export function useSequencePlayback({
     }
     
     if (buttonsToPlay.length === 0) {
-      console.log('No buttons to play')
+      console.log('No buttons to play - calling onSequenceComplete immediately to prevent getting stuck!')
+      // Call onSequenceComplete immediately to prevent getting stuck
+      setTimeout(() => {
+        if (isPlayingRef.current) {
+          onSequenceComplete()
+        }
+      }, 100)
       return
     }
 

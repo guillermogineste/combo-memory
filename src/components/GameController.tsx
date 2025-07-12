@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { GameBoard } from './ui/GameBoard'
 import { GameHeader } from './ui/GameHeader'
 import { GameModeSelector } from './ui/GameModeSelector'
@@ -22,9 +22,16 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   const gameState = useGameState()
   const [highlightedButton, setHighlightedButton] = useState<number | null>(null)
 
-  // Get current sequence buttons for playback
-  const currentSequenceButtons = gameState.getCurrentSequenceButtons()
-  console.log('Current sequence buttons:', currentSequenceButtons) // Debug log
+  // Get current sequence buttons for playback - memoized to prevent infinite loops
+  const currentSequenceButtons = useMemo(() => {
+    const buttons = gameState.getCurrentSequenceButtons()
+    console.log('Current sequence buttons (memoized):', buttons) // Debug log
+    return buttons
+  }, [
+    gameState.gameState.currentSequence?.id,
+    gameState.gameState.gameMode,
+    gameState.gameState.currentAdditiveLevel
+  ])
 
   // Auto-clear button states after success/fail
   useEffect(() => {
