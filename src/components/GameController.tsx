@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { GameBoard } from './ui/GameBoard'
 import { GameHeader } from './ui/GameHeader'
-import { GameModeSelector } from './ui/GameModeSelector'
+import { GameModeStartButtons } from './ui/GameModeStartButtons'
 import { GameStatus } from './ui/GameStatus'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
@@ -27,12 +27,10 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     const buttons = gameState.getCurrentSequenceButtons()
     console.log('Current sequence buttons (memoized):', buttons) // Debug log
     return buttons
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     gameState.gameState.currentSequence?.id,
     gameState.gameState.gameMode,
-    gameState.gameState.currentAdditiveLevel,
-    gameState.getCurrentSequenceButtons
+    gameState.gameState.currentAdditiveLevel
   ])
 
   // Auto-clear button states after success/fail
@@ -83,15 +81,14 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.currentState, gameState.addUserInput])
 
-  // Handle game mode selection
-  const handleGameModeChange = useCallback((mode: GameMode) => {
-    console.log('Game mode changed to:', mode) // Debug log
-    gameState.setGameMode(mode)
-    gameState.resetGame()
+  // Handle game mode selection and start game combined
+  const handleStartGameWithMode = useCallback((mode: GameMode) => {
+    console.log('Starting game with mode:', mode) // Debug log
+    gameState.startGameWithMode(mode)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState.setGameMode, gameState.resetGame])
+  }, [gameState.startGameWithMode])
 
-  // Handle start game button
+  // Handle start game button (for continuing existing games)
   const handleStartGame = useCallback(() => {
     if (!gameState.gameState.currentSequence) {
       console.log('Starting new game with random sequences') // Debug log
@@ -133,10 +130,10 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       {/* Game Header */}
       <GameHeader gameState={gameState.gameState} />
 
-      {/* Game Mode Selection */}
-      <GameModeSelector 
+      {/* Game Mode Selection and Start Buttons */}
+      <GameModeStartButtons 
         gameState={gameState.gameState} 
-        onGameModeChange={handleGameModeChange}
+        onStartGameWithMode={handleStartGameWithMode}
       />
 
       {/* Game Status */}

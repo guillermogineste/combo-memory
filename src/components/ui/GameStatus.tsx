@@ -46,9 +46,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
       case 'GAME_NOT_STARTED':
         return (
           <div className="text-center">
-            <Button onClick={onStartGame} className={statusButtonStyles}>
-              Start Game
-            </Button>
+            {/* Game start is now handled by GameModeStartButtons component */}
           </div>
         )
       

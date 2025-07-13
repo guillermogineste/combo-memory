@@ -10,6 +10,7 @@ import sequencesData from '@/data/sequences.json'
 type GameAction =
   | { type: 'INITIALIZE_GAME' }
   | { type: 'SET_GAME_MODE'; mode: GameMode }
+  | { type: 'START_GAME_WITH_MODE'; mode: GameMode }
   | { type: 'START_GAME_WITH_RANDOM_SEQUENCES' }
   | { type: 'START_SEQUENCE'; sequence: Sequence }
   | { type: 'SHOW_SEQUENCE' }
@@ -141,6 +142,34 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         maxAdditiveLevel: 0,
         userInput: [],
         currentAttempt: 1,
+        errorMessage: null
+      }
+    }
+
+    case 'START_GAME_WITH_MODE': {
+      // Combined action that sets game mode and starts the game
+      const gameConfigForMode = sequencesData as GameConfig
+      const allSequences = action.mode === 'QUICK_MODE' 
+        ? gameConfigForMode.quickModeSequences 
+        : gameConfigForMode.chainCombinationModeSequences
+      
+      // Select random sequences based on game mode
+      const selectedSequences = getRandomSequencesForMode(allSequences, action.mode)
+      
+      console.log(`Starting game with ${selectedSequences.length} randomly selected sequences for ${action.mode}`)
+      
+      return {
+        ...state,
+        gameMode: action.mode,
+        currentState: 'SHOWING_SEQUENCE',
+        sequences: selectedSequences,
+        currentSequenceIndex: 0,
+        currentSequence: selectedSequences[0] || null,
+        currentAdditiveLevel: 0,
+        maxAdditiveLevel: selectedSequences[0] ? getMaxAdditiveLevel(selectedSequences[0], action.mode) : 0,
+        userInput: [],
+        currentAttempt: 1,
+        score: 0,
         errorMessage: null
       }
     }
@@ -466,6 +495,14 @@ export function useGameState() {
   }
 
   /**
+   * Start a new game with a specific mode and randomly selected sequences
+   * @param mode - Game mode to use
+   */
+  const startGameWithMode = (mode: GameMode) => {
+    dispatch({ type: 'START_GAME_WITH_MODE', mode })
+  }
+
+  /**
    * Get the current sequence buttons to play based on mode and level
    */
   const getCurrentSequenceButtons = () => {
@@ -495,6 +532,7 @@ export function useGameState() {
     setGameMode,
     startSequence,
     startGameWithRandomSequences,
+    startGameWithMode,
     addUserInput,
     checkUserInput,
     nextSequence,
