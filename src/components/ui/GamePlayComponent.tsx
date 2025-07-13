@@ -1,7 +1,7 @@
 import React from 'react'
-import { GameHeader } from './GameHeader'
 import { GameStatus } from './GameStatus'
 import { GameBoard } from './GameBoard'
+import { GameProgress } from './GameProgress'
 import type { GameStateData, GameState } from '@/types/Game'
 
 export interface GamePlayComponentProps {
@@ -36,9 +36,6 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Game Header */}
-      <GameHeader gameState={gameState} />
-
       {/* Game Status */}
       <GameStatus 
         gameState={gameState}
@@ -54,6 +51,9 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
         lastPressedButton={gameState.lastPressedButton}
         lastButtonResult={gameState.lastButtonResult}
       />
+
+      {/* Game Progress */}
+      <GameProgress gameState={gameState} />
     </div>
   )
 } 

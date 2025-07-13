@@ -1,5 +1,4 @@
 import React from 'react'
-import { GameHeader } from './GameHeader'
 import { GameModeStartButtons } from './GameModeStartButtons'
 import type { GameStateData, GameMode } from '@/types/Game'
 
@@ -27,9 +26,6 @@ export const PreGameComponent: React.FC<PreGameComponentProps> = ({
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Game Header */}
-      <GameHeader gameState={gameState} />
-
       {/* Game Mode Selection and Start Buttons */}
       <GameModeStartButtons 
         gameState={gameState} 

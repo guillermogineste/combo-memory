@@ -1,5 +1,4 @@
 import React from 'react'
-import { GameHeader } from './GameHeader'
 import { GameStatus } from './GameStatus'
 import type { GameStateData } from '@/types/Game'
 
@@ -29,9 +28,6 @@ export const GameCompleteComponent: React.FC<GameCompleteComponentProps> = ({
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Game Header */}
-      <GameHeader gameState={gameState} />
-
       {/* Game Status - shows completion message and play again button */}
       <GameStatus 
         gameState={gameState}

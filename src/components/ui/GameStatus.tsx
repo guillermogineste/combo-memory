@@ -10,8 +10,8 @@ export interface GameStatusProps {
 }
 
 /**
- * GameStatus component that displays the current game status and relevant actions
- * Handles all game states: GAME_NOT_STARTED, SHOWING_SEQUENCE, WAITING_FOR_INPUT, SUCCESS, FAILURE, GAME_COMPLETE
+ * GameStatus component that displays success or failure states
+ * Shows "Well done" for success and "Try again" with buttons for failure
  */
 export const GameStatus: React.FC<GameStatusProps> = ({ 
   gameState, 
@@ -19,55 +19,19 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   onResetGame, 
   className 
 }) => {
-
-
-  /**
-   * Get next progression message for success state
-   * @returns Next step message
-   */
-  const getNextProgressionMessage = (): string => {
-    if (gameState.gameMode === 'CHAIN_COMBINATION_MODE' && gameState.currentAdditiveLevel < gameState.maxAdditiveLevel) {
-      return 'Moving to next level...'
-    }
-    return 'Moving to next sequence...'
-  }
-
-  // Custom button styles for status buttons
-  const statusButtonStyles = "bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black border-b-[8px]"
+  // Custom button styles for failure state buttons
   const retryButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px]"
   const resetButtonStyles = "bg-white hover:bg-white/90 text-black border-[3px] border-black border-b-[8px]"
 
-  const { currentState, score, errorMessage } = gameState
+  const { currentState } = gameState
 
   const renderStatusContent = () => {
     switch (currentState) {
-      case 'GAME_NOT_STARTED':
-        return (
-          <div className="text-center">
-            {/* Game start is now handled by GameModeStartButtons component */}
-          </div>
-        )
-      
-      case 'SHOWING_SEQUENCE':
-        return (
-          <div className="text-center">
-          </div>
-        )
-      
-      case 'WAITING_FOR_INPUT':
-        return (
-          <div className="text-center">
-          </div>
-        )
-      
       case 'SUCCESS':
         return (
           <div className="text-center">
-            <p className="text-green-400 font-bold text-lg">
-              🎉 Perfect! Well done!
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              {getNextProgressionMessage()}
+            <p className="text-black font-bold text-lg">
+              Well done
             </p>
           </div>
         )
@@ -75,11 +39,8 @@ export const GameStatus: React.FC<GameStatusProps> = ({
       case 'FAILURE':
         return (
           <div className="text-center">
-            <p className="text-red-400 font-bold text-lg">
-              ❌ Incorrect sequence!
-            </p>
-            <p className="text-slate-400 text-sm mt-2">
-              {errorMessage || 'Try again'}
+            <p className="text-black font-bold text-lg">
+              Try again
             </p>
             <div className="mt-4 space-x-2">
               <Button onClick={onRetry} className={retryButtonStyles}>
@@ -92,27 +53,8 @@ export const GameStatus: React.FC<GameStatusProps> = ({
           </div>
         )
       
-      case 'GAME_COMPLETE':
-        return (
-          <div className="text-center">
-            <p className="text-purple-400 font-bold text-2xl">
-              🏆 Game Complete!
-            </p>
-            <p className="text-slate-400 text-lg mt-2">
-              Final Score: {score}
-            </p>
-            <Button onClick={onResetGame} className={statusButtonStyles}>
-              Play Again
-            </Button>
-          </div>
-        )
-      
       default:
-        return (
-          <div className="text-center">
-            <p className="text-slate-400">Loading...</p>
-          </div>
-        )
+        return null
     }
   }
 
