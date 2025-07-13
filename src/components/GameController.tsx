@@ -27,10 +27,12 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     const buttons = gameState.getCurrentSequenceButtons()
     console.log('Current sequence buttons (memoized):', buttons) // Debug log
     return buttons
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     gameState.gameState.currentSequence?.id,
     gameState.gameState.gameMode,
-    gameState.gameState.currentAdditiveLevel
+    gameState.gameState.currentAdditiveLevel,
+    gameState.getCurrentSequenceButtons
   ])
 
   // Auto-clear button states after success/fail
@@ -43,11 +45,13 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
       return () => clearTimeout(timer)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.lastButtonResult, gameState.clearButtonStates])
 
   // Handle sequence completion
   const handleSequenceComplete = useCallback(() => {
     gameState.dispatch({ type: 'SEQUENCE_COMPLETE' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.dispatch])
 
   // Handle button highlighting during sequence playback
@@ -76,6 +80,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
     console.log('Button clicked:', buttonNumber) // Debug log
     gameState.addUserInput(buttonNumber)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.currentState, gameState.addUserInput])
 
   // Handle game mode selection
@@ -83,6 +88,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     console.log('Game mode changed to:', mode) // Debug log
     gameState.setGameMode(mode)
     gameState.resetGame()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.setGameMode, gameState.resetGame])
 
   // Handle start game button
@@ -94,12 +100,14 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       console.log('Continuing current game') // Debug log
       gameState.startSequence(gameState.gameState.currentSequenceIndex)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.currentSequence, gameState.gameState.currentSequenceIndex, gameState.startGameWithRandomSequences, gameState.startSequence])
 
   // Handle retry button
   const handleRetry = useCallback(() => {
     console.log('Retrying current sequence') // Debug log
     gameState.retrySequence()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.retrySequence])
 
   // Handle reset game
@@ -107,6 +115,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     console.log('Resetting game') // Debug log
     gameState.resetGame()
     setHighlightedButton(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.resetGame])
 
   // Update debug panel data

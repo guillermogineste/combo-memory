@@ -109,7 +109,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
   }
 
   switch (action.type) {
-    case 'INITIALIZE_GAME':
+    case 'INITIALIZE_GAME': {
       // Load sequences based on current game mode
       const gameConfig = sequencesData as GameConfig
       const sequences = state.gameMode === 'QUICK_MODE' 
@@ -122,8 +122,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         sequences,
         gameSettings: GAME_SETTINGS
       }
+    }
 
-    case 'SET_GAME_MODE':
+    case 'SET_GAME_MODE': {
       // Load sequences based on new game mode
       const gameConfigForMode = sequencesData as GameConfig
       const sequencesForMode = action.mode === 'QUICK_MODE' 
@@ -142,8 +143,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentAttempt: 1,
         errorMessage: null
       }
+    }
 
-    case 'START_GAME_WITH_RANDOM_SEQUENCES':
+    case 'START_GAME_WITH_RANDOM_SEQUENCES': {
       // Get all available sequences for the current game mode
       const gameConfigForRandom = sequencesData as GameConfig
       const allSequences = state.gameMode === 'QUICK_MODE' 
@@ -168,8 +170,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         score: 0,
         errorMessage: null
       }
+    }
 
-    case 'START_SEQUENCE':
+    case 'START_SEQUENCE': {
       const maxLevel = getMaxAdditiveLevel(action.sequence, state.gameMode)
       
       // Only reset additive level if this is a different sequence
@@ -189,6 +192,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         lastPressedButton: null,
         lastButtonResult: null
       }
+    }
 
     case 'SHOW_SEQUENCE':
       return {
@@ -228,7 +232,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         currentState: 'CHECKING_INPUT'
       }
 
-    case 'INPUT_SUCCESS':
+    case 'INPUT_SUCCESS': {
       const isChainCombinationMode = state.gameMode === 'CHAIN_COMBINATION_MODE'
       const canAdvanceLevel = isChainCombinationMode && state.currentAdditiveLevel < state.maxAdditiveLevel
       
@@ -242,6 +246,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         errorMessage: null,
         lastButtonResult: 'success'
       }
+    }
 
     case 'INPUT_FAILURE':
       return {
@@ -253,7 +258,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         lastButtonResult: 'fail'
       }
 
-    case 'NEXT_ADDITIVE_LEVEL':
+    case 'NEXT_ADDITIVE_LEVEL': {
       const nextLevel = state.currentAdditiveLevel + 1
       console.log('NEXT_ADDITIVE_LEVEL - Moving from level', state.currentAdditiveLevel, 'to level', nextLevel, 'Max:', state.maxAdditiveLevel) // Debug log
       
@@ -292,8 +297,9 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         lastPressedButton: null,
         lastButtonResult: null
       }
+    }
 
-    case 'NEXT_SEQUENCE':
+    case 'NEXT_SEQUENCE': {
       const nextIndex = state.currentSequenceIndex + 1
       if (nextIndex >= state.sequences.length) {
         return {
@@ -315,6 +321,7 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         lastPressedButton: null,
         lastButtonResult: null
       }
+    }
 
     case 'RETRY_SEQUENCE':
       return {

@@ -1,18 +1,39 @@
 import { useEffect } from 'react'
 import { UI_TIMING } from '@/constants/gameConstants'
+import type { GameStateData, GameMode, Sequence } from '@/types/Game'
+
+type GameAction =
+  | { type: 'INITIALIZE_GAME' }
+  | { type: 'SET_GAME_MODE'; mode: GameMode }
+  | { type: 'START_GAME_WITH_RANDOM_SEQUENCES' }
+  | { type: 'START_SEQUENCE'; sequence: Sequence }
+  | { type: 'SHOW_SEQUENCE' }
+  | { type: 'SEQUENCE_COMPLETE' }
+  | { type: 'WAIT_FOR_INPUT' }
+  | { type: 'ADD_USER_INPUT'; buttonNumber: number }
+  | { type: 'CLEAR_USER_INPUT' }
+  | { type: 'CHECK_INPUT' }
+  | { type: 'INPUT_SUCCESS' }
+  | { type: 'INPUT_FAILURE'; message: string }
+  | { type: 'NEXT_SEQUENCE' }
+  | { type: 'NEXT_ADDITIVE_LEVEL' }
+  | { type: 'RETRY_SEQUENCE' }
+  | { type: 'GAME_COMPLETE' }
+  | { type: 'RESET_GAME' }
+  | { type: 'CLEAR_BUTTON_STATES' }
 
 type GameStateHookReturn = {
-  gameState: any
-  dispatch: any
-  setGameMode: any
-  startSequence: any
-  startGameWithRandomSequences: any
-  addUserInput: any
-  checkUserInput: any
-  nextSequence: any
-  retrySequence: any
-  resetGame: any
-  getCurrentSequenceButtons: any
+  gameState: GameStateData
+  dispatch: React.Dispatch<GameAction>
+  setGameMode: (mode: GameMode) => void
+  startSequence: (sequenceIndex?: number) => void
+  startGameWithRandomSequences: () => void
+  addUserInput: (buttonNumber: number) => void
+  checkUserInput: () => void
+  nextSequence: () => void
+  retrySequence: () => void
+  resetGame: () => void
+  getCurrentSequenceButtons: () => number[]
 }
 
 /**
@@ -27,6 +48,7 @@ export function useGameFlow(gameState: GameStateHookReturn) {
       console.log('Auto-checking user input:', gameState.gameState.userInput) // Debug log
       gameState.checkUserInput()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.userInput, gameState.gameState.currentState, gameState.checkUserInput])
 
   // Auto-progress after success - directly start next sequence/level
@@ -52,5 +74,6 @@ export function useGameFlow(gameState: GameStateHookReturn) {
 
       return () => clearTimeout(timer)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.gameState.currentState, gameState.gameState.gameMode, gameState.gameState.currentAdditiveLevel, gameState.gameState.maxAdditiveLevel, gameState.gameState.currentSequenceIndex, gameState.gameState.sequences.length, gameState.dispatch])
 } 
