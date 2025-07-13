@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { GameBoard } from './ui/GameBoard'
-import { GameHeader } from './ui/GameHeader'
-import { GameModeStartButtons } from './ui/GameModeStartButtons'
-import { GameStatus } from './ui/GameStatus'
+import { PreGameComponent } from './ui/PreGameComponent'
+import { GamePlayComponent } from './ui/GamePlayComponent'
+import { GameCompleteComponent } from './ui/GameCompleteComponent'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
 import { useGameFlow } from '../hooks/useGameFlow'
@@ -17,6 +16,7 @@ export interface GameControllerProps {
 /**
  * GameController component that manages the entire Simon Says game flow
  * Coordinates game state management and sequence playback
+ * Now uses three distinct components for different game phases
  */
 export const GameController: React.FC<GameControllerProps> = ({ className, onDebugUpdate }) => {
   const gameState = useGameState()
@@ -88,18 +88,6 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState.startGameWithMode])
 
-  // Handle start game button (for continuing existing games)
-  const handleStartGame = useCallback(() => {
-    if (!gameState.gameState.currentSequence) {
-      console.log('Starting new game with random sequences') // Debug log
-      gameState.startGameWithRandomSequences()
-    } else {
-      console.log('Continuing current game') // Debug log
-      gameState.startSequence(gameState.gameState.currentSequenceIndex)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState.gameState.currentSequence, gameState.gameState.currentSequenceIndex, gameState.startGameWithRandomSequences, gameState.startSequence])
-
   // Handle retry button
   const handleRetry = useCallback(() => {
     console.log('Retrying current sequence') // Debug log
@@ -125,32 +113,30 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     }
   }, [gameState.gameState, currentSequenceButtons, onDebugUpdate])
 
-  return (
-    <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Game Header */}
-      <GameHeader gameState={gameState.gameState} />
+  console.log('GameController: Current game state:', gameState.gameState.currentState) // Debug log
 
-      {/* Game Mode Selection and Start Buttons */}
-      <GameModeStartButtons 
-        gameState={gameState.gameState} 
+  return (
+    <div className={`${className}`}>
+      {/* Pre-Game Component - shows before game starts */}
+      <PreGameComponent
+        gameState={gameState.gameState}
         onStartGameWithMode={handleStartGameWithMode}
       />
 
-      {/* Game Status */}
-      <GameStatus 
+      {/* Game Play Component - shows during active game play */}
+      <GamePlayComponent
         gameState={gameState.gameState}
-        onStartGame={handleStartGame}
+        onButtonClick={handleButtonClick}
         onRetry={handleRetry}
         onResetGame={handleResetGame}
+        highlightedButton={highlightedButton}
       />
 
-      {/* Game Board */}
-      <GameBoard
-        onButtonClick={handleButtonClick}
-        gameState={gameState.gameState.currentState}
-        highlightedButton={highlightedButton}
-        lastPressedButton={gameState.gameState.lastPressedButton}
-        lastButtonResult={gameState.gameState.lastButtonResult}
+      {/* Game Complete Component - shows when game is complete */}
+      <GameCompleteComponent
+        gameState={gameState.gameState}
+        onRetry={handleRetry}
+        onResetGame={handleResetGame}
       />
     </div>
   )
