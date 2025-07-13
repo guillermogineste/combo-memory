@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from './button'
+import { UIButton } from './UIButton'
 import type { GameStateData } from '@/types/Game'
 
 export interface GameStatusProps {
@@ -19,9 +19,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   onResetGame, 
   className 
 }) => {
-  // Custom button styles for failure state buttons
-  const retryButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px]"
-  const resetButtonStyles = "bg-white hover:bg-white/90 text-black border-[3px] border-black border-b-[8px]"
+
 
   const { currentState } = gameState
 
@@ -43,12 +41,12 @@ export const GameStatus: React.FC<GameStatusProps> = ({
               Try again
             </p>
             <div className="mt-4 space-x-2">
-              <Button onClick={onRetry} className={retryButtonStyles}>
+              <UIButton onClick={onRetry}>
                 Retry
-              </Button>
-              <Button onClick={onResetGame} className={resetButtonStyles}>
+              </UIButton>
+              <UIButton onClick={onResetGame}>
                 Reset Game
-              </Button>
+              </UIButton>
             </div>
           </div>
         )

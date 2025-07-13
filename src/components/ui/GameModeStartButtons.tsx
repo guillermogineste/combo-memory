@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from './button'
+import { UIButton } from './UIButton'
 import type { GameMode, GameStateData } from '@/types/Game'
 
 export interface GameModeStartButtonsProps {
@@ -40,30 +40,26 @@ export const GameModeStartButtons: React.FC<GameModeStartButtonsProps> = ({
     onStartGameWithMode('CHAIN_COMBINATION_MODE')
   }
 
-  // Button styles matching the existing game design
-  const simpleModeButtonStyles = "bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[80px] text-lg font-bold flex flex-col items-center justify-center"
-  const chainModeButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[80px] text-lg font-bold flex flex-col items-center justify-center"
-
   return (
     <div className={`flex flex-col items-center space-y-6 ${className}`}>
       <h2 className="text-xl font-bold text-black">Select game mode</h2>
       
       <div className="flex space-x-6">
-        <Button 
+        <UIButton 
           onClick={handleSimpleModeClick} 
-          className={simpleModeButtonStyles}
+          size="large"
         >
           <span className="text-lg font-bold">Simple</span>
           <span className="text-sm font-normal">Short simple sequences</span>
-        </Button>
+        </UIButton>
         
-        <Button 
+        <UIButton 
           onClick={handleChainModeClick} 
-          className={chainModeButtonStyles}
+          size="large"
         >
           <span className="text-lg font-bold">Chain</span>
           <span className="text-sm font-normal">Chain long sequences</span>
-        </Button>
+        </UIButton>
       </div>
     </div>
   )
