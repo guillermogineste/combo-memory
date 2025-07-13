@@ -120,7 +120,7 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
       <div
         ref={ref}
         className={cn(
-          "grid grid-cols-4 grid-rows-6 gap-4 w-[75vw] h-[60vh] mx-auto",
+          "grid grid-cols-4 grid-rows-6 w-[75vw] h-[60vh] max-w-[680px] max-h-[490px] mx-auto",
           className
         )}
         {...props}

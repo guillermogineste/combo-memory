@@ -4,14 +4,14 @@ import { cn } from "@/lib/utils"
 import { UI_TIMING } from "@/constants/gameConstants"
 
 const gameButtonVariants = cva(
-  "relative inline-flex items-center justify-center rounded-lg text-2xl font-bold text-white transition-all duration-150 select-none cursor-pointer border-4 border-opacity-20 shadow-lg bg-custom-red hover:bg-custom-red border-custom-red",
+  "shadow-[0_4px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-2xl font-bold text-white transition-all duration-150 select-none cursor-pointer border-3 bg-custom-red hover:bg-custom-red border-black",
   {
     variants: {
       state: {
         resting: "",
-        active: "ring-4 ring-white ring-opacity-60 scale-105 brightness-150 bg-custom-red-light hover:bg-custom-red-light border-custom-red-light",
-        success: "bg-green-500 hover:bg-green-500 border-green-500 ring-4 ring-green-300 ring-opacity-60 scale-105 brightness-150",
-        failure: "bg-red-600 hover:bg-red-600 border-red-600 ring-4 ring-red-300 ring-opacity-60 scale-105 brightness-150",
+        active: "scale-105 bg-custom-red-light hover:bg-custom-red-light",
+        success: "bg-custom-green hover:bg-custom-green border-custom-green-dark ring-custom-green scale-105 shadow-[0_4px_0_0_rgb(66,94,0)]",
+        failure: "bg-custom-red-bright hover:bg-custom-red-bright border-custom-red-darker ring-custom-red-bright scale-105 shadow-[0_4px_0_0_rgb(126,22,22)]",
       },
       size: {
         default: "h-[120px] w-[120px]",

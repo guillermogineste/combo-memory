@@ -3,11 +3,15 @@
 @theme {
   --color-custom-red: #94261F;
   --color-custom-red-light: #C2433D;
+  --color-custom-red-bright: #E12020;
+  --color-custom-red-darker: #7E1616;
   --color-custom-orange: #FF8060;
   --color-custom-orange-light: #FF9F87;
   --color-custom-yellow: #FFD45E;
   --color-custom-yellow-light: #FFA95D;
   --color-custom-golden: #EFBE6E;
+  --color-custom-green: #90B930;
+  --color-custom-green-dark: #425E00;
 }
 
 :root {
