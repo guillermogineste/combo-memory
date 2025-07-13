@@ -7,11 +7,9 @@
  */
 export const GAME_TIMING = {
   /** Duration to highlight each button in milliseconds */
-  buttonHighlightDuration: 500,
+  buttonHighlightDuration: 350,
   /** Pause between button highlights in milliseconds */
-  pauseBetweenButtons: 200,
-  /** Pause before user can start inputting in milliseconds */
-  pauseBeforeUserInput: 1000,
+  pauseBetweenButtons: 100,
 } as const
 
 /**

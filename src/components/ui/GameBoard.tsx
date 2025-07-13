@@ -74,11 +74,11 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
       const isExplicitlyActive = activeButtons.includes(buttonNumber)
       const isActive = isHighlighted || isExplicitlyActive
 
-      // Check if button should show success/fail state
+      // Check if button should show success/failure state
       const isSuccess = lastPressedButton === buttonNumber && lastButtonResult === 'success'
-      const isFail = lastPressedButton === buttonNumber && lastButtonResult === 'fail'
+      const isFailure = lastPressedButton === buttonNumber && lastButtonResult === 'fail'
 
-      return { isActive, isDisabled, isSuccess, isFail }
+      return { isActive, isDisabled, isSuccess, isFailure }
     }
 
     /**
@@ -86,7 +86,7 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
      */
     const renderButton = (config: { number: number; colStart: number; rowStart: number; rowSpan: number }) => {
       const { number, colStart, rowStart, rowSpan } = config
-      const { isActive, isDisabled, isSuccess, isFail } = getButtonState(number)
+      const { isActive, isDisabled, isSuccess, isFailure } = getButtonState(number)
 
       return (
         <div
@@ -109,7 +109,7 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
             isActive={isActive}
             isDisabled={isDisabled}
             isSuccess={isSuccess}
-            isFail={isFail}
+            isFailure={isFailure}
             onGameClick={handleButtonClick}
           />
         </div>

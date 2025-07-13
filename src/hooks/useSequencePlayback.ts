@@ -88,8 +88,7 @@ export function useSequencePlayback({
 
     const {
       buttonHighlightDuration,
-      pauseBetweenButtons,
-      pauseBeforeUserInput
+      pauseBetweenButtons
     } = GAME_TIMING
 
     let currentTime = 0
@@ -116,14 +115,14 @@ export function useSequencePlayback({
       currentTime += buttonHighlightDuration + pauseBetweenButtons
     })
 
-    // Schedule sequence completion
+    // Schedule sequence completion - removed pauseBeforeUserInput for immediate input
     const completeTimeout = setTimeout(() => {
       if (isPlayingRef.current) {
-        console.log('Sequence playback complete')
+        console.log('Sequence playback complete - ready for immediate input')
         onButtonHighlight(null) // Clear any highlights
         onSequenceComplete()
       }
-    }, currentTime - pauseBetweenButtons + pauseBeforeUserInput)
+    }, currentTime - pauseBetweenButtons)
     timeoutRefs.current.push(completeTimeout)
 
   }, [sequence, customButtons, onSequenceComplete, onButtonHighlight, clearTimeouts])
