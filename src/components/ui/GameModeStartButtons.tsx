@@ -10,7 +10,7 @@ export interface GameModeStartButtonsProps {
 
 /**
  * GameModeStartButtons component that provides two buttons to directly start games in different modes
- * Replaces the separate game mode selector and start game button
+ * Simplified version with horizontal layout and descriptions inside buttons
  */
 export const GameModeStartButtons: React.FC<GameModeStartButtonsProps> = ({ 
   gameState, 
@@ -23,55 +23,47 @@ export const GameModeStartButtons: React.FC<GameModeStartButtonsProps> = ({
   }
 
   /**
-   * Handle quick mode button click
+   * Handle simple mode button click
    * Sets game mode to QUICK_MODE and starts the game
    */
-  const handleQuickModeClick = () => {
-    console.log('Starting Quick Mode game') // Debug log
+  const handleSimpleModeClick = () => {
+    console.log('Starting Simple Mode game') // Debug log
     onStartGameWithMode('QUICK_MODE')
   }
 
   /**
-   * Handle chain combination mode button click  
+   * Handle chain mode button click  
    * Sets game mode to CHAIN_COMBINATION_MODE and starts the game
    */
   const handleChainModeClick = () => {
-    console.log('Starting Chain Combination Mode game') // Debug log
+    console.log('Starting Chain Mode game') // Debug log
     onStartGameWithMode('CHAIN_COMBINATION_MODE')
   }
 
   // Button styles matching the existing game design
-  const quickModeButtonStyles = "bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[60px] text-lg font-bold"
-  const chainModeButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[60px] text-lg font-bold"
+  const simpleModeButtonStyles = "bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[80px] text-lg font-bold flex flex-col items-center justify-center"
+  const chainModeButtonStyles = "bg-custom-yellow-light hover:bg-custom-yellow text-black border-[3px] border-black border-b-[8px] min-w-[200px] h-[80px] text-lg font-bold flex flex-col items-center justify-center"
 
   return (
     <div className={`flex flex-col items-center space-y-6 ${className}`}>
-      <h2 className="text-2xl font-bold text-white mb-2">Choose Game Mode</h2>
+      <h2 className="text-xl font-bold text-black">Select game mode</h2>
       
-      <div className="flex flex-col space-y-4">
-        <div className="text-center">
-          <Button 
-            onClick={handleQuickModeClick} 
-            className={quickModeButtonStyles}
-          >
-            🚀 Quick Mode
-          </Button>
-          <p className="text-sm text-slate-400 mt-2 max-w-[200px]">
-            Play short sequences one after another
-          </p>
-        </div>
+      <div className="flex space-x-6">
+        <Button 
+          onClick={handleSimpleModeClick} 
+          className={simpleModeButtonStyles}
+        >
+          <span className="text-lg font-bold">Simple</span>
+          <span className="text-sm font-normal">Short simple sequences</span>
+        </Button>
         
-        <div className="text-center">
-          <Button 
-            onClick={handleChainModeClick} 
-            className={chainModeButtonStyles}
-          >
-            🔗 Chain Combination Mode
-          </Button>
-          <p className="text-sm text-slate-400 mt-2 max-w-[200px]">
-            Build long sequences incrementally by groups
-          </p>
-        </div>
+        <Button 
+          onClick={handleChainModeClick} 
+          className={chainModeButtonStyles}
+        >
+          <span className="text-lg font-bold">Chain</span>
+          <span className="text-sm font-normal">Chain long sequences</span>
+        </Button>
       </div>
     </div>
   )

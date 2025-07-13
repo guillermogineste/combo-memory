@@ -10,7 +10,7 @@ export interface PreGameComponentProps {
 
 /**
  * PreGameComponent that displays before the game starts
- * Shows the game header and mode selection buttons, but no game board
+ * Shows the simplified game mode selection with horizontal buttons
  */
 export const PreGameComponent: React.FC<PreGameComponentProps> = ({ 
   gameState, 
@@ -25,20 +25,11 @@ export const PreGameComponent: React.FC<PreGameComponentProps> = ({
   console.log('PreGameComponent: Rendering pre-game interface') // Debug log
 
   return (
-    <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Game Mode Selection and Start Buttons */}
+    <div className={`flex flex-col items-center ${className}`}>
       <GameModeStartButtons 
         gameState={gameState} 
         onStartGameWithMode={onStartGameWithMode}
       />
-
-      {/* Welcome message */}
-      <div className="text-center text-slate-300 max-w-md">
-        <p className="text-lg mb-2">Welcome to Simon Says!</p>
-        <p className="text-sm">
-          Choose a game mode above to begin your memory challenge.
-        </p>
-      </div>
     </div>
   )
 } 
