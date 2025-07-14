@@ -4,7 +4,6 @@ import type { GameStateData } from '@/types/Game'
 
 export interface GameCompleteComponentProps {
   gameState: GameStateData
-  onRetry: () => void
   onResetGame: () => void
   className?: string
 }
@@ -15,7 +14,6 @@ export interface GameCompleteComponentProps {
  */
 export const GameCompleteComponent: React.FC<GameCompleteComponentProps> = ({ 
   gameState, 
-  onRetry,
   onResetGame,
   className 
 }) => {

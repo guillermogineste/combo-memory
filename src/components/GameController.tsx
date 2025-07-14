@@ -135,7 +135,6 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       {/* Game Complete Component - shows when game is complete */}
       <GameCompleteComponent
         gameState={gameState.gameState}
-        onRetry={handleRetry}
         onResetGame={handleResetGame}
       />
     </div>
