@@ -10,6 +10,8 @@ export const GAME_TIMING = {
   buttonHighlightDuration: 350,
   /** Pause between button highlights in milliseconds */
   pauseBetweenButtons: 100,
+  /** Delay before sequence starts playing (prevents first button from lighting up too soon) */
+  initialSequenceDelay: 1000,
 } as const
 
 /**

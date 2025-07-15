@@ -81,17 +81,18 @@ export function useSequencePlayback({
       return
     }
 
-    console.log('Starting sequence playback - Buttons:', buttonsToPlay)
-    
     // Clear any existing timeouts
     clearTimeouts()
 
     const {
       buttonHighlightDuration,
-      pauseBetweenButtons
+      pauseBetweenButtons,
+      initialSequenceDelay
     } = GAME_TIMING
 
-    let currentTime = 0
+    console.log('Starting sequence playback - Buttons:', buttonsToPlay, 'Initial delay:', initialSequenceDelay, 'ms')
+
+    let currentTime = initialSequenceDelay
 
     // Play each button in sequence
     buttonsToPlay.forEach((buttonNumber) => {
