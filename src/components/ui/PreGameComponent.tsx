@@ -47,16 +47,16 @@ export const PreGameComponent: React.FC<PreGameComponentProps> = ({
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>
-      {/* Difficulty Selection */}
-      <SegmentedControl
-        selectedValue={selectedDifficulty}
-        onValueChange={handleDifficultyChange}
-      />
-
       {/* Game Mode Selection */}
       <GameModeStartButtons 
         gameState={gameState} 
         onStartGameWithMode={handleStartGameWithMode}
+      />
+
+      {/* Difficulty Selection */}
+      <SegmentedControl
+        selectedValue={selectedDifficulty}
+        onValueChange={handleDifficultyChange}
       />
     </div>
   )
