@@ -28,6 +28,11 @@ export interface GameSettings {
 }
 
 /**
+ * Difficulty levels available for game sequences
+ */
+export type DifficultyLevel = 'easy' | 'medium' | 'hard'
+
+/**
  * Individual sequence configuration
  */
 export interface Sequence {
@@ -35,6 +40,8 @@ export interface Sequence {
   id: number
   /** Array of button numbers (1-8) or nested arrays for chain combination mode */
   sequence: number[] | number[][]
+  /** Difficulty level of the sequence */
+  difficulty?: DifficultyLevel
 }
 
 /**
@@ -55,6 +62,8 @@ export interface GameStateData {
   currentState: GameState
   /** Current game mode (quick mode or chain combination mode) */
   gameMode: GameMode
+  /** Current difficulty level */
+  difficulty: DifficultyLevel
   /** Index of the current sequence being played */
   currentSequenceIndex: number
   /** The current sequence being played */

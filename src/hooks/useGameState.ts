@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from 'react'
-import type { GameStateData, Sequence, GameConfig, GameMode } from '@/types/Game'
+import type { GameStateData, Sequence, GameConfig, GameMode, DifficultyLevel } from '@/types/Game'
 import { GAME_SETTINGS, SCORING } from '@/constants/gameConstants'
 import { getRandomSequencesForMode } from '@/utils/sequenceUtils'
 import sequencesData from '@/data/sequences.json'
@@ -10,7 +10,7 @@ import sequencesData from '@/data/sequences.json'
 type GameAction =
   | { type: 'INITIALIZE_GAME' }
   | { type: 'SET_GAME_MODE'; mode: GameMode }
-  | { type: 'START_GAME_WITH_MODE'; mode: GameMode }
+  | { type: 'START_GAME_WITH_MODE'; mode: GameMode; difficulty: DifficultyLevel }
   | { type: 'START_GAME_WITH_RANDOM_SEQUENCES' }
   | { type: 'START_SEQUENCE'; sequence: Sequence }
   | { type: 'SHOW_SEQUENCE' }
@@ -34,6 +34,7 @@ type GameAction =
 const initialGameState: GameStateData = {
   currentState: 'GAME_NOT_STARTED',
   gameMode: 'QUICK_MODE',
+  difficulty: 'easy',
   currentSequenceIndex: 0,
   currentSequence: null,
   currentAdditiveLevel: 0,
@@ -153,14 +154,18 @@ function gameStateReducer(state: GameStateData, action: GameAction): GameStateDa
         ? gameConfigForMode.quickModeSequences 
         : gameConfigForMode.chainCombinationModeSequences
       
-      // Select random sequences based on game mode
-      const selectedSequences = getRandomSequencesForMode(allSequences, action.mode)
+      // Filter sequences by difficulty level
+      const filteredSequences = allSequences.filter(seq => seq.difficulty === action.difficulty)
       
-      console.log(`Starting game with ${selectedSequences.length} randomly selected sequences for ${action.mode}`)
+      // Select random sequences based on game mode and difficulty
+      const selectedSequences = getRandomSequencesForMode(filteredSequences, action.mode)
+      
+      console.log(`Starting game with ${selectedSequences.length} randomly selected sequences for ${action.mode} (${action.difficulty} difficulty)`)
       
       return {
         ...state,
         gameMode: action.mode,
+        difficulty: action.difficulty,
         currentState: 'SHOWING_SEQUENCE',
         sequences: selectedSequences,
         currentSequenceIndex: 0,
@@ -497,9 +502,10 @@ export function useGameState() {
   /**
    * Start a new game with a specific mode and randomly selected sequences
    * @param mode - Game mode to use
+   * @param difficulty - Difficulty level to filter sequences
    */
-  const startGameWithMode = (mode: GameMode) => {
-    dispatch({ type: 'START_GAME_WITH_MODE', mode })
+  const startGameWithMode = (mode: GameMode, difficulty: DifficultyLevel) => {
+    dispatch({ type: 'START_GAME_WITH_MODE', mode, difficulty })
   }
 
   /**

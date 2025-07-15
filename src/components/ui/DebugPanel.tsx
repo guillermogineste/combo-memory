@@ -48,6 +48,10 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({
             <span className="text-purple-400">{gameState.gameMode}</span>
           </p>
           <p>
+            <span className="text-slate-500">Difficulty:</span>{' '}
+            <span className="text-pink-400">{gameState.difficulty}</span>
+          </p>
+          <p>
             <span className="text-slate-500">Score:</span>{' '}
             <span className="text-yellow-400">{gameState.score}</span>
           </p>
