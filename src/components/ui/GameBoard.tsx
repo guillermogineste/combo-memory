@@ -48,16 +48,14 @@ const GameBoard = React.forwardRef<HTMLDivElement, GameBoardProps>(
     
     /**
      * Handle button click with game state validation
+     * @param buttonNumber - The number of the button that was clicked
      */
     const handleButtonClick = (buttonNumber: number) => {
-      // Only allow clicks during WAITING_FOR_INPUT state
-      if (gameState && gameState !== 'WAITING_FOR_INPUT') {
-        console.log(`GameBoard: Button ${buttonNumber} clicked but game state is ${gameState}`)
-        return
-      }
+      console.log(`GameBoard: Button ${buttonNumber} clicked`) // Debug log
       
-      console.log(`GameBoard: Button ${buttonNumber} clicked`)
-      onButtonClick?.(buttonNumber)
+      if (onButtonClick) {
+        onButtonClick(buttonNumber)
+      }
     }
 
     /**
