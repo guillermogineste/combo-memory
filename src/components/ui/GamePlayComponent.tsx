@@ -35,7 +35,7 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
   console.log('GamePlayComponent: Rendering game play interface for state:', gameState.currentState) // Debug log
 
   return (
-    <div className={`flex flex-col items-center space-y-8 ${className}`}>
+    <div className={`flex flex-col items-center justify-center space-y-8 w-full ${className}`}>
       {/* Game Status */}
       <GameStatus 
         gameState={gameState}

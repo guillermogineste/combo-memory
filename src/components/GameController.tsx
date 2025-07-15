@@ -116,7 +116,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   console.log('GameController: Current game state:', gameState.gameState.currentState) // Debug log
 
   return (
-    <div className={`${className}`}>
+    <div className={`min-h-screen flex ${className}`}>
       {/* Pre-Game Component - shows before game starts */}
       <PreGameComponent
         gameState={gameState.gameState}

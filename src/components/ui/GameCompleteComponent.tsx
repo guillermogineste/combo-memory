@@ -25,7 +25,7 @@ export const GameCompleteComponent: React.FC<GameCompleteComponentProps> = ({
   console.log('GameCompleteComponent: Rendering game complete interface') // Debug log
 
   return (
-    <div className={`flex flex-col items-center space-y-4 ${className}`}>
+    <div className={`flex flex-col items-center justify-center space-y-8 w-full ${className}`}>
       <p className="text-black font-bold text-lg">
         Well done!
       </p>

@@ -46,7 +46,7 @@ export const PreGameComponent: React.FC<PreGameComponentProps> = ({
   console.log('PreGameComponent: Rendering pre-game interface') // Debug log
 
   return (
-    <div className={`flex flex-col items-center space-y-8 ${className}`}>
+    <div className={`flex flex-col items-center justify-center space-y-8 w-full ${className}`}>
       {/* Game Mode Selection */}
       <GameModeStartButtons 
         gameState={gameState} 
