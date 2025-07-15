@@ -47,7 +47,7 @@ export const SegmentedControl: React.FC<SegmentedControlProps> = ({
       </label>
       
       <div className="flex border-[3px] border-black rounded-[24px] shadow-[0_4px_0_0_black] overflow-hidden">
-        {options.map((option, index) => (
+        {options.map((option) => (
           <label
             key={option.value}
             className={cn(

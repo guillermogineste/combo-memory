@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GameStatus } from './GameStatus'
 import { GameBoard } from './GameBoard'
@@ -32,8 +32,11 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
   const [isExiting, setIsExiting] = useState(false)
   const [shouldRender, setShouldRender] = useState(false)
   
-  // Only render during active game states
-  const activeGameStates: GameState[] = ['SHOWING_SEQUENCE', 'WAITING_FOR_INPUT', 'SUCCESS', 'FAILURE']
+  // Only render during active game states - memoized to prevent unnecessary re-renders
+  const activeGameStates = useMemo(() => 
+    ['SHOWING_SEQUENCE', 'WAITING_FOR_INPUT', 'SUCCESS', 'FAILURE'] as GameState[], 
+    []
+  )
   
   // Handle component visibility with proper timing
   useEffect(() => {
@@ -47,7 +50,7 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
     } else {
       setShouldRender(false)
     }
-  }, [gameState.currentState])
+  }, [gameState.currentState, activeGameStates])
 
   // Handle exit animation when game is completing
   useEffect(() => {
