@@ -23,15 +23,14 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   const [highlightedButton, setHighlightedButton] = useState<number | null>(null)
 
   // Get current sequence buttons for playback - memoized to prevent infinite loops
-  // Note: We intentionally include specific nested dependencies instead of just gameState
-  // to prevent unnecessary re-renders. Removing these would cause problematic re-renders.
+  // Note: We intentionally include specific nested dependencies instead of the full gameState object
+  // to prevent unnecessary re-renders. Including gameState would cause problematic re-renders.
   const currentSequenceButtons = useMemo(() => {
     const buttons = gameState.getCurrentSequenceButtons()
     console.log('Current sequence buttons (memoized):', buttons) // Debug log
     return buttons
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    gameState,
     gameState.gameState.currentSequence?.id,
     gameState.gameState.gameMode,
     gameState.gameState.currentAdditiveLevel
