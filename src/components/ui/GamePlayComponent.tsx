@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GameStatus } from './GameStatus'
 import { GameBoard } from './GameBoard'
 import { GameProgress } from './GameProgress'
 import { UI_TIMING } from '@/constants/gameConstants'
-import type { GameStateData, GameState } from '@/types/Game'
+import type { GameStateData } from '@/types/Game'
 
 export interface GamePlayComponentProps {
   gameState: GameStateData
@@ -30,28 +30,7 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
   className 
 }) => {
   const [isExiting, setIsExiting] = useState(false)
-  const [shouldRender, setShouldRender] = useState(false)
   
-  // Only render during active game states - memoized to prevent unnecessary re-renders
-  const activeGameStates = useMemo(() => 
-    ['SHOWING_SEQUENCE', 'WAITING_FOR_INPUT', 'SUCCESS', 'FAILURE'] as GameState[], 
-    []
-  )
-  
-  // Handle component visibility with proper timing
-  useEffect(() => {
-    if (activeGameStates.includes(gameState.currentState)) {
-      // Add delay before showing to allow PreGameComponent to exit
-      const timer = setTimeout(() => {
-        setShouldRender(true)
-      }, 600) // Wait for PreGameComponent exit animation + small buffer
-      
-      return () => clearTimeout(timer)
-    } else {
-      setShouldRender(false)
-    }
-  }, [gameState.currentState, activeGameStates])
-
   // Handle exit animation when game is completing
   useEffect(() => {
     if (gameState.currentState === 'SUCCESS') {
@@ -79,15 +58,10 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
     }
   }, [gameState.currentState, gameState.currentSequenceIndex, gameState.sequences.length, gameState.gameMode, gameState.currentAdditiveLevel, gameState.maxAdditiveLevel])
 
-  // Don't render if not in active game states or not ready to show
-  if (!activeGameStates.includes(gameState.currentState) || !shouldRender) {
-    return null
-  }
-
   console.log('GamePlayComponent: Rendering game play interface for state:', gameState.currentState) // Debug log
 
   return (
-    <div className={`flex flex-col items-center justify-center space-y-8 w-full ${className}`}>
+    <div className={`flex flex-col items-center space-y-8 ${className}`}>
       {/* Game Status - Overlay component, not animated */}
       <GameStatus 
         gameState={gameState}

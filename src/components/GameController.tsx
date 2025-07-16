@@ -118,28 +118,53 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
 
   console.log('GameController: Current game state:', gameState.gameState.currentState) // Debug log
 
+  /**
+   * Render the appropriate game component based on current state
+   * Centralizes component switching logic for better maintainability
+   */
+  const renderGameComponent = () => {
+    switch (gameState.gameState.currentState) {
+      case 'GAME_NOT_STARTED':
+        return (
+          <PreGameComponent
+            gameState={gameState.gameState}
+            onStartGameWithMode={handleStartGameWithMode}
+          />
+        )
+      
+      case 'SHOWING_SEQUENCE':
+      case 'WAITING_FOR_INPUT':
+      case 'SUCCESS':
+      case 'FAILURE':
+        return (
+          <GamePlayComponent
+            gameState={gameState.gameState}
+            onButtonClick={handleButtonClick}
+            onRetry={handleRetry}
+            onResetGame={handleResetGame}
+            highlightedButton={highlightedButton}
+          />
+        )
+      
+      case 'GAME_COMPLETE':
+        return (
+          <GameCompleteComponent
+            gameState={gameState.gameState}
+            onResetGame={handleResetGame}
+          />
+        )
+      
+      default:
+        return null
+    }
+  }
+
   return (
-    <div className={`min-h-screen flex ${className}`}>
-      {/* Pre-Game Component - shows before game starts */}
-      <PreGameComponent
-        gameState={gameState.gameState}
-        onStartGameWithMode={handleStartGameWithMode}
-      />
-
-      {/* Game Play Component - shows during active game play */}
-      <GamePlayComponent
-        gameState={gameState.gameState}
-        onButtonClick={handleButtonClick}
-        onRetry={handleRetry}
-        onResetGame={handleResetGame}
-        highlightedButton={highlightedButton}
-      />
-
-      {/* Game Complete Component - shows when game is complete */}
-      <GameCompleteComponent
-        gameState={gameState.gameState}
-        onResetGame={handleResetGame}
-      />
+    <div className={`h-full flex flex-col ${className}`}>
+      {/* Main Game Area - Full height, centered content */}
+      <div className="flex-1 flex flex-col items-center justify-center">
+        {renderGameComponent()}
+      </div>
     </div>
   )
 } 
