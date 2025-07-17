@@ -7,6 +7,7 @@ import { useSequencePlayback } from '@/hooks/useSequencePlayback'
 import { useGameFlow } from '../../../hooks/useGameFlow'
 import { UI_TIMING } from '@/constants/gameConstants'
 import type { GameControllerProps } from './GameController.types'
+import type { GameMode, DifficultyLevel } from '@/types/Game'
 
 /**
  * GameController component that manages the entire Simon Says game flow
@@ -80,7 +81,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   }, [gameState.gameState.currentState, gameState.addUserInput])
 
   // Handle game mode selection and start game combined
-  const handleStartGameWithMode = useCallback((mode: any, difficulty: any) => {
+  const handleStartGameWithMode = useCallback((mode: GameMode, difficulty: DifficultyLevel) => {
     console.log('Starting game with mode:', mode, 'difficulty:', difficulty) // Debug log
     gameState.startGameWithMode(mode, difficulty)
     // eslint-disable-next-line react-hooks/exhaustive-deps

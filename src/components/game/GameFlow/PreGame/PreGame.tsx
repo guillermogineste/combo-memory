@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ModeSelector } from './ModeSelector'
 import { SegmentedControl } from '../../../ui/SegmentedControl'
 import type { PreGameProps } from './PreGame.types'
+import type { GameMode } from '@/types/Game'
 
 /**
  * PreGame component that displays before the game starts
@@ -20,7 +21,7 @@ export const PreGame: React.FC<PreGameProps> = ({
    * Handle game mode selection with the current difficulty
    * @param mode - The selected game mode
    */
-  const handleStartGameWithMode = (mode: any) => {
+  const handleStartGameWithMode = (mode: GameMode) => {
     console.log('PreGame: Starting game with mode:', mode, 'difficulty:', selectedDifficulty) // Debug log
     onStartGameWithMode(mode, selectedDifficulty)
   }

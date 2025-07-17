@@ -10,6 +10,7 @@ export const COLORS = {
   CRIMSON_MEDIUM: 'custom-red-light', // #C2433D
   CRIMSON_BRIGHT: 'custom-red-bright', // #E12020
   CRIMSON_DARKER: 'custom-red-darker', // #7E1616
+  CRIMSON_PALE: 'custom-red-pale',    // #964843
   
   // Light coral variants  
   CORAL_BRIGHT: 'custom-orange',      // #FF8060

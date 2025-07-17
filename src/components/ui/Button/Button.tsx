@@ -7,7 +7,7 @@ import type { ButtonProps } from "./Button.types"
  * Button component variants using class-variance-authority
  * Unified styling for all UI buttons with consistent game design
  */
-export const buttonVariants = cva(
+const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap font-bold transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black shadow-[0_4px_0_0_black] active:shadow-[0_2px_0_0_black] active:translate-y-[2px]",
   {
     variants: {

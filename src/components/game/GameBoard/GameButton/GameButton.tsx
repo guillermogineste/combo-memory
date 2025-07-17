@@ -13,6 +13,7 @@ const gameButtonVariants = cva(
         active: "scale-105 bg-custom-red-light hover:bg-custom-red-light",
         success: "bg-custom-green hover:bg-custom-green border-custom-green-dark ring-custom-green scale-105 shadow-[0_4px_0_0_rgb(66,94,0)]",
         failure: "bg-custom-red-bright hover:bg-custom-red-bright border-custom-red-darker ring-custom-red-bright scale-105 shadow-[0_4px_0_0_rgb(126,22,22)]",
+        disabled: "bg-custom-red-pale hover:bg-custom-red-pale cursor-not-allowed",
       },
       size: {
         default: "h-[120px] w-[120px]",
@@ -33,7 +34,7 @@ const gameButtonVariants = cva(
  * GameButton component for Simon Says game
  * @param number - The number displayed on the button (1-8)
  * @param isActive - Whether the button is currently active (highlighted during sequence or user press)
- * @param isDisabled - Whether the button is disabled (but visually looks like resting state)
+ * @param isDisabled - Whether the button is disabled (shows pale red color and prevents interaction)
  * @param isSuccess - Whether the button should show success state (green)
  * @param isFailure - Whether the button should show failure state (red)
  * @param onGameClick - Callback when the button is clicked, receives the button number
@@ -54,11 +55,13 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
     const [isCurrentlyPressed, setIsCurrentlyPressed] = React.useState(false)
 
     // Determine the button state based on props
-    // Priority: success/failure > active > resting
+    // Priority: success/failure > active > disabled > resting
+    // This allows disabled buttons to still show active state during sequence display
     const getButtonState = () => {
       if (isSuccess) return 'success'
       if (isFailure) return 'failure'
       if (isActive || isCurrentlyPressed) return 'active'
+      if (isDisabled) return 'disabled'
       return 'resting'
     }
 
