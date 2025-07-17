@@ -33,12 +33,12 @@ export const SegmentedControl: React.FC<SegmentedControlProps> = ({
         Select Difficulty
       </label>
       
-      <div className="flex border-[3px] border-black rounded-[24px] shadow-[0_4px_0_0_black] overflow-hidden">
+      <div className="flex border-[3px] border-black rounded-[24px] shadow-[0_4px_0_0_black] overflow-hidden w-[90vw] sm:w-auto">
         {options.map((option) => (
           <label
             key={option.value}
             className={cn(
-              'relative flex items-center cursor-pointer px-6 py-3 transition-all duration-150 font-bold text-sm select-none',
+              'relative flex items-center justify-center cursor-pointer px-6 py-3 transition-all duration-150 font-bold text-sm select-none flex-1',
               'border-r-[3px] border-black last:border-r-0',
               selectedValue === option.value
                 ? 'bg-custom-orange text-black shadow-inner'

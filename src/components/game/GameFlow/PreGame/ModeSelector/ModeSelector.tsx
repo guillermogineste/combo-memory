@@ -38,10 +38,11 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
     <div className={`flex flex-col items-center space-y-6 ${className}`}>
       <h2 className="text-xl font-bold text-black">Select game mode</h2>
       
-      <div className="flex space-x-6">
+      <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
         <Button 
           onClick={handleSimpleModeClick} 
           size="large"
+          className="w-[90vw] sm:w-auto"
         >
           <span className="text-lg font-bold">Simple</span>
           <span className="text-sm font-normal">Short simple sequences</span>
@@ -50,6 +51,7 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
         <Button 
           onClick={handleChainModeClick} 
           size="large"
+          className="w-[90vw] sm:w-auto"
         >
           <span className="text-lg font-bold">Chain</span>
           <span className="text-sm font-normal">Chain long sequences</span>
