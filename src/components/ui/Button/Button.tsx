@@ -8,12 +8,12 @@ import type { ButtonProps } from "./Button.types"
  * Unified styling for all UI buttons with consistent game design
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap font-bold transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black shadow-[0_4px_0_0_black] active:shadow-[0_2px_0_0_black] active:translate-y-[2px]",
+  "inline-flex items-center justify-center whitespace-nowrap font-bold transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer bg-custom-orange hover:bg-custom-orange/90 text-black border-2 border-black shadow-[0_3px_0_0_black] active:shadow-[0_1px_0_0_black] active:translate-y-[2px]",
   {
     variants: {
       size: {
         default: "h-10 px-4 py-2 text-sm rounded-[24px]",
-        large: "min-w-[200px] h-[80px] text-lg flex-col space-y-1 rounded-[32px]",
+        large: "min-w-[200px] h-[80px] text-lg flex-col space-y-1 rounded-[24px]",
       },
     },
     defaultVariants: {

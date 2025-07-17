@@ -5,14 +5,14 @@ import { UI_TIMING } from "@/constants/gameConstants"
 import type { GameButtonProps } from "./GameButton.types"
 
 const gameButtonVariants = cva(
-  "shadow-[0_4px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-[38px] font-heading text-white transition-all duration-150 select-none cursor-pointer border-3 bg-custom-red hover:bg-custom-red border-black",
+  "shadow-[0_3px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-[38px] font-heading text-white transition-all duration-150 select-none cursor-pointer border-2 bg-custom-red hover:bg-custom-red border-black",
   {
     variants: {
       state: {
         resting: "",
         active: "scale-105 bg-custom-red-light hover:bg-custom-red-light",
-        success: "bg-custom-green hover:bg-custom-green border-custom-green-dark ring-custom-green scale-105 shadow-[0_4px_0_0_rgb(66,94,0)]",
-        failure: "bg-custom-red-bright hover:bg-custom-red-bright border-custom-red-darker ring-custom-red-bright scale-105 shadow-[0_4px_0_0_rgb(126,22,22)]",
+        success: "bg-custom-green hover:bg-custom-green border-custom-green-dark ring-custom-green scale-105 shadow-[0_3px_0_0_rgb(66,94,0)]",
+        failure: "bg-custom-red-bright hover:bg-custom-red-bright border-custom-red-darker ring-custom-red-bright scale-105 shadow-[0_3px_0_0_rgb(126,22,22)]",
         disabled: "bg-custom-red-pale hover:bg-custom-red-pale cursor-not-allowed",
       },
       size: {

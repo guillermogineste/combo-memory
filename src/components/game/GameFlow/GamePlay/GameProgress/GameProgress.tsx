@@ -55,11 +55,11 @@ export const GameProgress: React.FC<GameProgressProps> = ({
       <div
         key={index}
         className={cn(
-          "h-[25px] w-[25px] border-[3px] border-black",
+          "h-[25px] w-[25px] border-2 border-black",
           {
             // Background colors
             "bg-custom-red": isActive,
-            "bg-transparent": !isActive,
+            "bg-custom-control": !isActive,
             
             // Border radius for first and last segments
             "rounded-l-[50%] w-[28px]": isFirst,

@@ -9,4 +9,9 @@
   position: fixed;
   inset: 0;
   overflow: auto;
+  /* X-pattern background */
+  background-image: url('/x-pattern.svg');
+  background-size: 80px 80px; /* Use the SVG's native size */
+  background-repeat: repeat;
+  background-position: 0 0;
 }
