@@ -3,3 +3,10 @@
   height: 100%;
   overflow: hidden;
 }
+
+/* Main app container using the SO solution */
+.app-container {
+  position: fixed;
+  inset: 0;
+  overflow: auto;
+}

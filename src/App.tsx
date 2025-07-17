@@ -14,14 +14,16 @@ function App() {
   })
 
   return (
-    <div className="relative h-full bg-custom-golden overflow-hidden">
+    <div className="app-container bg-custom-golden">
+      <div className="relative h-full">
         <GameController onDebugUpdate={setDebugData} />
-      {debugData.gameState && (
-        <DebugPanel 
-          gameState={debugData.gameState} 
-          currentSequenceButtons={debugData.currentSequenceButtons}
-        />
-      )}
+        {debugData.gameState && (
+          <DebugPanel 
+            gameState={debugData.gameState} 
+            currentSequenceButtons={debugData.currentSequenceButtons}
+          />
+        )}
+      </div>
     </div>
   )
 }

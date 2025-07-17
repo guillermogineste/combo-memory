@@ -25,13 +25,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+/* Apply the Stack Overflow fix */
+html, body {
   margin: 0;
   min-width: 320px;
-  /* Use mobile-friendly viewport units */
-  min-height: 100vh; /* Fallback for older browsers */
-  height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height - adjusts for mobile UI */
-  height: 100dvh;
   overflow: hidden;
+  height: 100%;
 }
