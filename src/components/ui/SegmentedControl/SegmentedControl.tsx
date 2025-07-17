@@ -28,10 +28,10 @@ export const SegmentedControl: React.FC<SegmentedControlProps> = ({
   }
 
   return (
-    <div className={cn('flex flex-col items-center space-y-2', className)}>
-      <label className="text-sm font-bold text-black">
-        Select Difficulty
-      </label>
+    <div className={cn('flex flex-col items-center gap-2.5', className)}>
+      <h3 className="font-heading text-[18px] text-black">
+        Difficulty
+      </h3>
       
       <div className="flex border-[3px] border-black rounded-[24px] shadow-[0_4px_0_0_black] overflow-hidden w-[90vw] sm:w-auto">
         {options.map((option) => (
@@ -53,7 +53,7 @@ export const SegmentedControl: React.FC<SegmentedControlProps> = ({
               onChange={() => handleOptionChange(option.value)}
               className="absolute opacity-0 pointer-events-none"
             />
-            <span>
+            <span className="font-interactive">
               {option.label}
             </span>
           </label>

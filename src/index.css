@@ -16,13 +16,87 @@
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --font-body: "logic-monospace", "Fira Code", "JetBrains Mono", "Source Code Pro", "Courier New", monospace;
+  --font-heading: "logic-monoscript", "Roboto Mono", "Space Mono", "Fira Code", "Courier New", monospace;
+  --text-color: white;
+  
+  font-family: var(--font-body);
+  line-height: normal;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Base Styles */
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Typography Utility Classes */
+.font-body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.font-interactive {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-style: normal;
+}
+
+.font-display {
+  font-family: var(--font-body);
+  font-style: normal;
+  letter-spacing: -0.04em;
+  padding: 0;
+  margin: 0;
+}
+
+/* Button and Interactive Element Styles */
+button, .button {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-style: normal;
+  cursor: pointer;
+}
+
+/* Form Element Styles */
+select, input {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Text Elements */
+p, span, div {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
 }
 
 /* Apply the Stack Overflow fix */

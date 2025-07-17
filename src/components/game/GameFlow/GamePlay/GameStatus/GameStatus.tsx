@@ -54,15 +54,15 @@ export const GameStatus: React.FC<GameStatusProps> = ({
             transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
             className="text-center"
           >
-            <p className="text-black font-bold text-lg">
+            <h2 className="font-heading text-[26px] text-black">
               Try again
-            </p>
+            </h2>
             <div className="mt-4 space-x-2">
-              <Button onClick={onRetry}>
-                Retry
+              <Button onClick={onRetry} className="px-6 py-4">
+                <span className="font-interactive">Retry</span>
               </Button>
-              <Button onClick={onResetGame}>
-                Reset Game
+              <Button onClick={onResetGame} className="px-6 py-4">
+                <span className="font-interactive">Reset Game</span>
               </Button>
             </div>
           </motion.div>

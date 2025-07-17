@@ -21,14 +21,14 @@ export const GameComplete: React.FC<GameCompleteProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`flex flex-col items-center space-y-8 ${className}`}
+      className={`flex flex-col items-center gap-4 ${className}`}
     >
-      <p className="text-black font-bold text-lg">
+      <h2 className="font-heading text-[26px] text-black">
         Well done!
-      </p>
+      </h2>
       
-      <Button onClick={onResetGame}>
-        Restart
+      <Button onClick={onResetGame} className="px-6 py-4">
+        <span className="font-interactive">Restart</span>
       </Button>
     </motion.div>
   )

@@ -5,7 +5,7 @@ import { UI_TIMING } from "@/constants/gameConstants"
 import type { GameButtonProps } from "./GameButton.types"
 
 const gameButtonVariants = cva(
-  "shadow-[0_4px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-2xl font-bold text-white transition-all duration-150 select-none cursor-pointer border-3 bg-custom-red hover:bg-custom-red border-black",
+  "shadow-[0_4px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-[38px] font-heading text-white transition-all duration-150 select-none cursor-pointer border-3 bg-custom-red hover:bg-custom-red border-black",
   {
     variants: {
       state: {
@@ -16,11 +16,11 @@ const gameButtonVariants = cva(
         disabled: "bg-custom-red-pale hover:bg-custom-red-pale cursor-not-allowed",
       },
       size: {
-        default: "h-[120px] w-[120px]",
-        sm: "h-[80px] w-[80px] text-lg",
-        lg: "h-[160px] w-[160px] text-3xl",
-        game: "h-[80px] w-[80px] text-xl",
-        flexible: "h-full w-full text-xl",
+        default: "h-[120px] w-[120px] text-[38px]",
+        sm: "h-[80px] w-[80px] text-[38px]",
+        lg: "h-[160px] w-[160px] text-[38px]",
+        game: "h-[80px] w-[80px] text-[38px]",
+        flexible: "h-full w-full text-[38px]",
       },
     },
     defaultVariants: {
@@ -96,7 +96,7 @@ const GameButton = React.forwardRef<HTMLButtonElement, GameButtonProps>(
         disabled={isDisabled}
         {...props}
       >
-        <span className="drop-shadow-lg">{number}</span>
+        <span className="drop-shadow-lg font-heading">{number}</span>
       </button>
     )
   }
