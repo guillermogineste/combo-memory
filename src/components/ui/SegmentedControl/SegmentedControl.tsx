@@ -1,19 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
-
-/**
- * Difficulty levels available for game sequences
- */
-export type DifficultyLevel = 'easy' | 'medium' | 'hard'
-
-export interface SegmentedControlProps {
-  /** Currently selected difficulty level */
-  selectedValue: DifficultyLevel
-  /** Callback when difficulty selection changes */
-  onValueChange: (value: DifficultyLevel) => void
-  /** Optional className for styling */
-  className?: string
-}
+import type { SegmentedControlProps, DifficultyLevel } from './SegmentedControl.types'
 
 /**
  * SegmentedControl component for selecting difficulty levels

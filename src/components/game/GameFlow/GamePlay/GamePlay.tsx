@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GameStatus } from './GameStatus'
-import { GameBoard } from './GameBoard'
+import { GameBoard } from '../../GameBoard'
 import { GameProgress } from './GameProgress'
 import { UI_TIMING } from '@/constants/gameConstants'
-import type { GameStateData } from '@/types/Game'
-
-export interface GamePlayComponentProps {
-  gameState: GameStateData
-  onButtonClick: (buttonNumber: number) => void
-  onRetry: () => void
-  onResetGame: () => void
-  highlightedButton: number | null
-  className?: string
-}
+import type { GamePlayProps } from './GamePlay.types'
 
 /**
- * GamePlayComponent that displays during active game play
+ * GamePlay component that displays during active game play
  * Shows the game header, status, and game board with interactive buttons
  * Features animated entrance for the game board and progress indicator
  * Includes exit animation when game completes
  */
-export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({ 
+export const GamePlay: React.FC<GamePlayProps> = ({ 
   gameState, 
   onButtonClick,
   onRetry,
@@ -41,7 +32,7 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
         : true
       
       if (isLastSequence && isLastLevel) {
-        console.log('GamePlayComponent: Game completing - scheduling exit animation') // Debug log
+        console.log('GamePlay: Game completing - scheduling exit animation') // Debug log
         
         // Start exit animation after showing success state
         const exitTimer = setTimeout(() => {
@@ -58,7 +49,7 @@ export const GamePlayComponent: React.FC<GamePlayComponentProps> = ({
     }
   }, [gameState.currentState, gameState.currentSequenceIndex, gameState.sequences.length, gameState.gameMode, gameState.currentAdditiveLevel, gameState.maxAdditiveLevel])
 
-  console.log('GamePlayComponent: Rendering game play interface for state:', gameState.currentState) // Debug log
+  console.log('GamePlay: Rendering game play interface for state:', gameState.currentState) // Debug log
 
   return (
     <div className={`flex flex-col items-center space-y-8 ${className}`}>

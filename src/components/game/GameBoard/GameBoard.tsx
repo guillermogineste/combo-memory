@@ -1,18 +1,7 @@
 import * as React from "react"
 import { GameButton } from "./GameButton"
 import { cn } from "@/lib/utils"
-import type { GameState } from "@/types/Game"
-
-export interface GameBoardProps {
-  className?: string
-  onButtonClick?: (buttonNumber: number) => void
-  activeButtons?: number[]
-  disabledButtons?: number[]
-  gameState?: GameState
-  highlightedButton?: number | null
-  lastPressedButton?: number | null
-  lastButtonResult?: 'success' | 'fail' | null
-}
+import type { GameBoardProps } from "./GameBoard.types"
 
 /**
  * Button configuration for the 4x6 grid layout

@@ -1,12 +1,13 @@
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
+import type { ButtonProps } from "./Button.types"
 
 /**
- * UIButton component variants using class-variance-authority
+ * Button component variants using class-variance-authority
  * Unified styling for all UI buttons with consistent game design
  */
-const uiButtonVariants = cva(
+export const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap font-bold transition-all duration-150 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer bg-custom-orange hover:bg-custom-orange/90 text-black border-[3px] border-black shadow-[0_4px_0_0_black] active:shadow-[0_2px_0_0_black] active:translate-y-[2px]",
   {
     variants: {
@@ -21,14 +22,8 @@ const uiButtonVariants = cva(
   }
 )
 
-export interface UIButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof uiButtonVariants> {
-  asChild?: boolean
-}
-
 /**
- * UIButton component - unified button for all UI actions
+ * Button component - unified button for all UI actions
  * Features consistent styling with 3px black border, FF8060 background, and 4px solid drop shadow
  * 
  * @param size - Button size variant (default or large)
@@ -36,7 +31,7 @@ export interface UIButtonProps
  * @param className - Additional CSS classes
  * @param children - Button content
  */
-const UIButton = React.forwardRef<HTMLButtonElement, UIButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, size, asChild = false, children, ...props }, ref) => {
     if (asChild) {
       return <>{children}</>
@@ -45,7 +40,7 @@ const UIButton = React.forwardRef<HTMLButtonElement, UIButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn(uiButtonVariants({ size, className }))}
+        className={cn(buttonVariants({ size, className }))}
         {...props}
       >
         {children}
@@ -54,6 +49,6 @@ const UIButton = React.forwardRef<HTMLButtonElement, UIButtonProps>(
   }
 )
 
-UIButton.displayName = "UIButton"
+Button.displayName = "Button"
 
-export { UIButton } 
+export { Button } 

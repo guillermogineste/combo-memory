@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { PreGameComponent } from './ui/PreGameComponent'
-import { GamePlayComponent } from './ui/GamePlayComponent'
-import { GameCompleteComponent } from './ui/GameCompleteComponent'
+import { PreGame } from '../GameFlow/PreGame'
+import { GamePlay } from '../GameFlow/GamePlay'
+import { GameComplete } from '../GameFlow/GameComplete'
 import { useGameState } from '@/hooks/useGameState'
 import { useSequencePlayback } from '@/hooks/useSequencePlayback'
-import { useGameFlow } from '../hooks/useGameFlow'
+import { useGameFlow } from '../../../hooks/useGameFlow'
 import { UI_TIMING } from '@/constants/gameConstants'
-import type { GameMode, GameStateData, DifficultyLevel } from '@/types/Game'
-
-export interface GameControllerProps {
-  className?: string
-  onDebugUpdate?: (data: { gameState: GameStateData; currentSequenceButtons: number[] }) => void
-}
+import type { GameControllerProps } from './GameController.types'
 
 /**
  * GameController component that manages the entire Simon Says game flow
@@ -85,7 +80,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
   }, [gameState.gameState.currentState, gameState.addUserInput])
 
   // Handle game mode selection and start game combined
-  const handleStartGameWithMode = useCallback((mode: GameMode, difficulty: DifficultyLevel) => {
+  const handleStartGameWithMode = useCallback((mode: any, difficulty: any) => {
     console.log('Starting game with mode:', mode, 'difficulty:', difficulty) // Debug log
     gameState.startGameWithMode(mode, difficulty)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -126,7 +121,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
     switch (gameState.gameState.currentState) {
       case 'GAME_NOT_STARTED':
         return (
-          <PreGameComponent
+          <PreGame
             gameState={gameState.gameState}
             onStartGameWithMode={handleStartGameWithMode}
           />
@@ -137,7 +132,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       case 'SUCCESS':
       case 'FAILURE':
         return (
-          <GamePlayComponent
+          <GamePlay
             gameState={gameState.gameState}
             onButtonClick={handleButtonClick}
             onRetry={handleRetry}
@@ -148,7 +143,7 @@ export const GameController: React.FC<GameControllerProps> = ({ className, onDeb
       
       case 'GAME_COMPLETE':
         return (
-          <GameCompleteComponent
+          <GameComplete
             gameState={gameState.gameState}
             onResetGame={handleResetGame}
           />

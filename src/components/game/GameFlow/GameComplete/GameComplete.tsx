@@ -1,25 +1,18 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { UIButton } from './UIButton'
-import type { GameStateData } from '@/types/Game'
-
-export interface GameCompleteComponentProps {
-  gameState: GameStateData
-  onResetGame: () => void
-  className?: string
-}
+import { Button } from '../../../ui/Button'
+import type { GameCompleteProps } from './GameComplete.types'
 
 /**
- * GameCompleteComponent that displays when the game is complete
+ * GameComplete component that displays when the game is complete
  * Shows "Well done!" and a restart button
  * Features animated entrance with fade-in and slide-up animation
  */
-export const GameCompleteComponent: React.FC<GameCompleteComponentProps> = ({ 
-  gameState, 
+export const GameComplete: React.FC<GameCompleteProps> = ({ 
   onResetGame,
   className 
 }) => {
-  console.log('GameCompleteComponent: Rendering game complete interface') // Debug log
+  console.log('GameComplete: Rendering game complete interface') // Debug log
 
   return (
     <motion.div
@@ -34,9 +27,9 @@ export const GameCompleteComponent: React.FC<GameCompleteComponentProps> = ({
         Well done!
       </p>
       
-      <UIButton onClick={onResetGame}>
+      <Button onClick={onResetGame}>
         Restart
-      </UIButton>
+      </Button>
     </motion.div>
   )
 } 

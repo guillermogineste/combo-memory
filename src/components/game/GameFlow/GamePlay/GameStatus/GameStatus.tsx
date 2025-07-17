@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { UIButton } from './UIButton'
+import { Button } from '../../../../ui/Button'
 import { UI_TIMING } from '@/constants/gameConstants'
-import type { GameStateData } from '@/types/Game'
-
-export interface GameStatusProps {
-  gameState: GameStateData
-  onRetry: () => void
-  onResetGame: () => void
-  className?: string
-}
+import type { GameStatusProps } from './GameStatus.types'
 
 /**
  * GameStatus component that displays failure state only as a full-screen overlay
@@ -65,12 +58,12 @@ export const GameStatus: React.FC<GameStatusProps> = ({
               Try again
             </p>
             <div className="mt-4 space-x-2">
-              <UIButton onClick={onRetry}>
+              <Button onClick={onRetry}>
                 Retry
-              </UIButton>
-              <UIButton onClick={onResetGame}>
+              </Button>
+              <Button onClick={onResetGame}>
                 Reset Game
-              </UIButton>
+              </Button>
             </div>
           </motion.div>
         </motion.div>

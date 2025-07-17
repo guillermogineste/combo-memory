@@ -1,11 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
-import type { GameStateData } from '@/types/Game'
-
-export interface GameProgressProps {
-  gameState: GameStateData
-  className?: string
-}
+import type { GameProgressProps } from './GameProgress.types'
 
 /**
  * GameProgress component that displays the overall game progress
@@ -79,7 +74,7 @@ export const GameProgress: React.FC<GameProgressProps> = ({
   }
 
   return (
-    <div className={cn("flex", className)}>
+    <div className={cn("flex items-center", className)}>
       {Array.from({ length: totalSequences }, (_, index) => renderSegment(index))}
     </div>
   )

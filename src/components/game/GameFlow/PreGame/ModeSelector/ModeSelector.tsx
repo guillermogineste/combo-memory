@@ -1,18 +1,12 @@
 import React from 'react'
-import { UIButton } from './UIButton'
-import type { GameMode, GameStateData } from '@/types/Game'
-
-export interface GameModeStartButtonsProps {
-  gameState: GameStateData
-  onStartGameWithMode: (mode: GameMode) => void
-  className?: string
-}
+import { Button } from '../../../../ui/Button'
+import type { ModeSelectorProps } from './ModeSelector.types'
 
 /**
- * GameModeStartButtons component that provides two buttons to directly start games in different modes
+ * ModeSelector component that provides two buttons to directly start games in different modes
  * Simplified version with horizontal layout and descriptions inside buttons
  */
-export const GameModeStartButtons: React.FC<GameModeStartButtonsProps> = ({ 
+export const ModeSelector: React.FC<ModeSelectorProps> = ({ 
   gameState, 
   onStartGameWithMode, 
   className 
@@ -45,21 +39,21 @@ export const GameModeStartButtons: React.FC<GameModeStartButtonsProps> = ({
       <h2 className="text-xl font-bold text-black">Select game mode</h2>
       
       <div className="flex space-x-6">
-        <UIButton 
+        <Button 
           onClick={handleSimpleModeClick} 
           size="large"
         >
           <span className="text-lg font-bold">Simple</span>
           <span className="text-sm font-normal">Short simple sequences</span>
-        </UIButton>
+        </Button>
         
-        <UIButton 
+        <Button 
           onClick={handleChainModeClick} 
           size="large"
         >
           <span className="text-lg font-bold">Chain</span>
           <span className="text-sm font-normal">Chain long sequences</span>
-        </UIButton>
+        </Button>
       </div>
     </div>
   )

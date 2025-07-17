@@ -1,10 +1,5 @@
 import React from 'react'
-import type { GameStateData } from '@/types/Game'
-
-interface DebugPanelProps {
-  gameState: GameStateData
-  currentSequenceButtons: number[]
-}
+import type { DebugPanelProps } from './DebugPanel.types'
 
 /**
  * Debug panel component that displays game state information

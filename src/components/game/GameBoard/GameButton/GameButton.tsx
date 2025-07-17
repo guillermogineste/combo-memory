@@ -1,7 +1,8 @@
 import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { UI_TIMING } from "@/constants/gameConstants"
+import type { GameButtonProps } from "./GameButton.types"
 
 const gameButtonVariants = cva(
   "shadow-[0_4px_0_0_black] relative inline-flex items-center justify-center rounded-3xl text-2xl font-bold text-white transition-all duration-150 select-none cursor-pointer border-3 bg-custom-red hover:bg-custom-red border-black",
@@ -27,17 +28,6 @@ const gameButtonVariants = cva(
     },
   }
 )
-
-export interface GameButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof gameButtonVariants> {
-  number: number
-  isActive?: boolean
-  isDisabled?: boolean
-  isSuccess?: boolean
-  isFailure?: boolean
-  onGameClick?: (number: number) => void
-}
 
 /**
  * GameButton component for Simon Says game
