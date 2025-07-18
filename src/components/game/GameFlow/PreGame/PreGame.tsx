@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ModeSelector } from './ModeSelector'
 import { SegmentedControl } from '../../../ui/SegmentedControl'
+import { Button } from '../../../ui/Button'
 import type { PreGameProps } from './PreGame.types'
-import type { GameMode } from '@/types/Game'
+import type { GameMode, DifficultyLevel } from '@/types/Game'
 
 /**
  * PreGame component that displays before the game starts
- * Shows difficulty selection and game mode selection
+ * Shows game mode selection, difficulty selection, and play button
  * Features animated entrance with fade and slide animations
  */
 export const PreGame: React.FC<PreGameProps> = ({ 
@@ -15,24 +16,33 @@ export const PreGame: React.FC<PreGameProps> = ({
   onStartGameWithMode, 
   className 
 }) => {
-  const [selectedDifficulty, setSelectedDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
+  const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyLevel>('easy')
+  const [selectedMode, setSelectedMode] = useState<GameMode>('QUICK_MODE')
 
   /**
-   * Handle game mode selection with the current difficulty
+   * Handle game mode selection change
    * @param mode - The selected game mode
    */
-  const handleStartGameWithMode = (mode: GameMode) => {
-    console.log('PreGame: Starting game with mode:', mode, 'difficulty:', selectedDifficulty) // Debug log
-    onStartGameWithMode(mode, selectedDifficulty)
+  const handleModeChange = (mode: GameMode) => {
+    console.log('PreGame: Mode changed to:', mode) // Debug log
+    setSelectedMode(mode)
   }
 
   /**
    * Handle difficulty selection change
    * @param difficulty - The selected difficulty level
    */
-  const handleDifficultyChange = (difficulty: 'easy' | 'medium' | 'hard') => {
+  const handleDifficultyChange = (difficulty: DifficultyLevel) => {
     console.log('PreGame: Difficulty changed to:', difficulty) // Debug log
     setSelectedDifficulty(difficulty)
+  }
+
+  /**
+   * Handle game start with selected mode and difficulty
+   */
+  const handleStartGame = () => {
+    console.log('PreGame: Starting game with mode:', selectedMode, 'difficulty:', selectedDifficulty) // Debug log
+    onStartGameWithMode(selectedMode, selectedDifficulty)
   }
 
   console.log('PreGame: Rendering pre-game interface') // Debug log
@@ -49,7 +59,8 @@ export const PreGame: React.FC<PreGameProps> = ({
       {/* Game Mode Selection */}
       <ModeSelector 
         gameState={gameState} 
-        onStartGameWithMode={handleStartGameWithMode}
+        selectedMode={selectedMode}
+        onModeChange={handleModeChange}
       />
 
       {/* Difficulty Selection */}
@@ -57,6 +68,15 @@ export const PreGame: React.FC<PreGameProps> = ({
         selectedValue={selectedDifficulty}
         onValueChange={handleDifficultyChange}
       />
+
+      {/* Play Button - Primary Red Style */}
+      <Button 
+        onClick={handleStartGame} 
+        size="large"
+        className="w-[90vw] sm:w-auto px-6 py-2 bg-custom-red hover:bg-custom-red-light text-white"
+      >
+        <span className="text-xl font-heading">Play</span>
+      </Button>
     </motion.div>
   )
 } 
